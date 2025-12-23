@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Wallet - Mon Espace</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/NGpJ6343/IMG_8321.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* === VARIABLES DE COULEURS MEGA WALLET === */
+        :root { 
+            --primary: #007bff;   
+            --secondary: #6c5ce7; 
+            --success: #00b894;   
+            --warning: #e17055;   
+            --bg: #f8f9fa;        
+            --text: #2d3436;      
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; }
+
+        /* === BARRE DE NAVIGATION HAUT === */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .logo-small {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text);
+        }
+        .logo-small i {
+            background: var(--primary);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* === DESIGN CARTE SOLDE === */
+        .balance-card { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; padding: 30px; border-radius: 24px; text-align: center; 
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2); margin-bottom: 25px; position: relative; 
+            overflow: hidden;
+        }
+        .balance-amount { font-size: 38px; font-weight: 700; }
+
+        /* === SECTIONS BLANCHES === */
+        .info-section { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f1f1; font-size: 14px; }
+        
+        .invite-box { background: #f1f2f6; padding: 12px; border-radius: 12px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+        /* === BOUTONS === */
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-deposit { background: var(--success); color: white; }
+        .btn-withdraw { background: var(--warning); color: white; }
+        .btn-history { background: #636e72; color: white; margin-top: 10px; }
+        .btn-info { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        
+        #form-recharge, #form-retrait, #guide-site, #historique-box { display: none; background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        /* === BOUTON TELEGRAM ANIME === */
+        .btn-telegram { 
+            display: flex; align-items: center; justify-content: center; gap: 12px; 
+            background: #0088cc; color: white; padding: 18px; border-radius: 15px; 
+            text-decoration: none; font-weight: 700; margin-bottom: 25px;
+            animation: pulse-telegram 2s infinite; 
+        }
+        @keyframes pulse-telegram {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(0, 136, 204, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); }
+        }
+
+        /* === GUIDE TEXTES === */
+        .guide-title { color: var(--text); font-size: 17px; font-weight: 700; margin-top: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .guide-text { font-size: 13px; color: #636e72; line-height: 1.6; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); }
+
+        table { width: 100%; font-size: 13px; border-collapse: collapse; }
+        td { padding: 10px 8px; border-bottom: 1px solid #eee; font-weight: 500; }
+        .btn-logout { background: none; color: #fab1a0; border: none; cursor: pointer; width: 100%; text-decoration: underline; margin-top: 20px; font-weight: 600; }
+        
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="navbar-brand">
+        <div class="logo-small">
+            <i class="fas fa-wallet"></i>
+            <span>Mega <span style="color:var(--primary)">Wallet</span></span>
+        </div>
+        <div style="font-size: 12px; color: var(--success); font-weight: 600;">
+            <i class="fas fa-check-circle"></i> En ligne
+        </div>
+    </div>
+    
+    <div class="balance-card">
+        <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
+        <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
+        <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
+    </div>
+
+    <div class="info-section">
+        <div class="info-item"><span>ID Client</span><b id="user-id" style="color:var(--primary)">---</b></div>
+        <div class="info-item" style="border:none; padding-bottom:0;"><span>Lien d'invitation (Commission 40%)</span></div>
+        <div class="invite-box">
+            <span id="invite-link">Chargement...</span>
+            <i class="fas fa-copy" onclick="copyLink()" style="cursor:pointer; color:var(--primary); font-size: 16px;"></i>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+        <button class="btn btn-deposit" onclick="toggleSection('form-recharge')">📥 Dépôt</button>
+        <button class="btn btn-withdraw" onclick="toggleSection('form-retrait')">📤 Retrait</button>
+    </div>
+
+    <div id="form-recharge">
+        <h4 style="margin-top:0"><i class="fas fa-university"></i> Créditer mon compte</h4>
+        <p style="font-size: 12px; color: #636e72;">Envoyez les fonds au <b>07 00 00 00 00</b> via Orange/MTN/Wave, puis entrez l'ID de transaction ci-dessous :</p>
+        <input type="number" id="depot-montant" placeholder="Montant déposé (FCFA)">
+        <input type="text" id="depot-id" placeholder="ID de la transaction (SMS)">
+        <button class="btn btn-deposit" onclick="envoyerPreuve()">Confirmer le dépôt</button>
+    </div>
+
+    <div id="form-retrait">
+        <h4 style="margin-top:0"><i class="fas fa-money-check-alt"></i> Retirer mes fonds</h4>
+        <input type="number" id="retrait-montant" placeholder="Montant (Min 100 F)">
+        <select id="retrait-methode">
+            <option value="Orange">Orange Money</option>
+            <option value="MTN">MTN MoMo</option>
+            <option value="Wave">Wave</option>
+        </select>
+        <input type="text" id="retrait-numero" placeholder="Numéro de réception">
+        <button class="btn btn-withdraw" onclick="demanderRetrait()">Demander le paiement</button>
+    </div>
+
+    <button class="btn btn-history" onclick="toggleSection('historique-box')">
+        <i class="fas fa-history"></i> Historique des activités <i class="fas fa-chevron-down" style="margin-left:10px; font-size:12px"></i>
+    </button>
+    <div id="historique-box" class="info-section" style="padding: 10px;">
+        <table>
+            <tbody id="table-historique"></tbody>
+        </table>
+    </div>
+
+    <button class="btn btn-info" onclick="toggleSection('guide-site')">
+        <i class="fas fa-question-circle"></i> Guide Mega Wallet
+    </button>
+    
+    <div id="guide-site">
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h2 style="font-size: 15px; margin-bottom: 15px;">Assistance & Communauté</h2>
+            <a href="https://t.me/+yISVS_-X3hAxMzBk" target="_blank" class="btn-telegram">
+                <i class="fab fa-telegram-plane"></i> Rejoindre le Canal Telegram
+            </a>
+        </div>
+
+        <div class="guide-title"><i class="fas fa-wallet" style="color:var(--success)"></i> 1. LE SYSTÈME DE DÉPÔT</div>
+        <div class="guide-text">
+            Transférez le montant voulu sur le numéro indiqué dans la section dépôt. Copiez l'<b>ID de transaction</b> reçu par SMS et collez-le dans le formulaire. La validation est effectuée par nos agents sous 15 minutes.
+        </div>
+
+        <div class="guide-title"><i class="fas fa-hand-holding-usd" style="color:var(--warning)"></i> 2. COMMENT RETIRER ?</div>
+        <div class="guide-text">
+            Retrait possible dès <b>100 FCFA</b>. Remplissez le formulaire de retrait avec votre numéro. Les paiements sont envoyés sur votre compte Mobile Money sous 12h maximum.
+        </div>
+
+        <div class="guide-title"><i class="fas fa-share-alt" style="color:var(--primary)"></i> 3. GAGNER 40% PAR AMI</div>
+        <div class="guide-text">
+            Partagez votre lien d'invitation. Lorsqu'un ami s'inscrit et fait un dépôt, Mega Wallet vous reverse automatiquement <b>40%</b> du montant déposé sur votre solde.
+        </div>
+    </div>
+
+    <button class="btn btn-logout" onclick="logout()">Se déconnecter</button>
+</div>
+
+<script>
+    /* === LOGIQUE JAVASCRIPT MEGA WALLET === */
+    let userData = JSON.parse(localStorage.getItem('user'));
+    const API = "https://backend-xxgf.onrender.com";
+
+    // Correction : On redirige vers index.html si l'utilisateur n'est pas trouvé
+    if (!userData) window.location.href = "index.html";
+
+    function toggleSection(id) {
+        const target = document.getElementById(id);
+        const isVisible = target.style.display === 'block';
+        ['form-recharge', 'form-retrait', 'guide-site', 'historique-box'].forEach(s => document.getElementById(s).style.display = 'none');
+        target.style.display = isVisible ? 'none' : 'block';
+    }
+
+    function copyLink() { 
+        navigator.clipboard.writeText(document.getElementById('invite-link').innerText); 
+        alert("Lien d'affiliation copié !"); 
+    }
+
+    async function rafraichir() {
+        try {
+            const res = await fetch(`${API}/login`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ telephone: userData.telephone, password: userData.password })
+            });
+            const data = await res.json();
+            if(data.success) {
+                userData = data.user;
+                localStorage.setItem('user', JSON.stringify(userData));
+                document.getElementById('user-balance').innerText = userData.balance;
+            }
+            
+            const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
+            const hdata = await hres.json();
+            document.getElementById('table-historique').innerHTML = hdata.map(t => {
+                const type = t.statut.includes('retrait') ? '📤 Retrait' : '📥 Dépôt';
+                const color = t.statut.includes('attente') ? 'orange' : 'green';
+                return `<tr><td>${type}</td><td>${t.montant} F</td><td style="color:${color}">${t.statut.replace('retrait ','')}</td></tr>`;
+            }).join('');
+        } catch(e) { console.log("Erreur serveur"); }
+    }
+
+    async function demanderRetrait() {
+        const mtInput = document.getElementById('retrait-montant').value;
+        const mt = parseFloat(mtInput);
+        
+        if(isNaN(mt) || mt < 100) return alert("Minimum 100 FCFA");
+
+        // On rafraîchit les données avant de valider le solde
+        await rafraichir();
+
+        if(parseFloat(userData.balance) < mt) {
+            return alert("Solde insuffisant ! Votre solde réel est de " + userData.balance + " FCFA.");
+        }
+
+        const res = await fetch(`${API}/retrait`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                id_public_user: userData.id_public, 
+                montant: mt, 
+                methode: document.getElementById('retrait-methode').value, 
+                numero: document.getElementById('retrait-numero').value 
+            })
+        });
+
+        if(res.ok) { 
+            alert("Demande de retrait transmise !");
+            await rafraichir(); 
+            toggleSection('none'); 
+        } else { 
+            alert("Une erreur est survenue lors de la demande.");
+        }
+    }
+
+    async function envoyerPreuve() {
+        const res = await fetch(`${API}/depot`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                id_public_user: userData.id_public, 
+                transaction_id: document.getElementById('depot-id').value, 
+                montant: document.getElementById('depot-montant').value 
+            })
+        });
+        if(res.ok) { alert("Dépôt enregistré ! En attente de vérification."); rafraichir(); toggleSection('none'); }
+    }
+
+    document.getElementById('user-id').innerText = userData.id_public;
+    // Mise à jour du lien d'invitation pour pointer vers index.html
+    document.getElementById('invite-link').innerText = window.location.origin + "/index.html?ref=" + userData.code_promo;
+    
+    rafraichir();
+
+    // Correction : logout redirige maintenant vers index.html
+    function logout() { localStorage.clear(); window.location.href = "index.html"; }
+</script>
+</body>
+</html>
