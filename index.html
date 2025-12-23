@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Wallet - Inscription & Connexion</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/NGpJ6343/IMG_8321.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root { 
+            --primary: #007bff; 
+            --dark: #1a1a1a; 
+            --light: #f4f7f6; 
+            --accent: #6c5ce7;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--light); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+
+        .auth-card { 
+            background: white; 
+            padding: 40px 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 400px; 
+        }
+
+        .logo-container { text-align: center; margin-bottom: 25px; }
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            width: 60px; height: 60px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px; box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
+        }
+        .logo-text { font-size: 24px; font-weight: 700; color: var(--dark); margin: 0; }
+        .logo-text span { color: var(--primary); }
+
+        h2 { text-align: center; color: var(--dark); margin-bottom: 25px; font-size: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #636e72; }
+        input { 
+            width: 100%; padding: 12px 15px; border: 2px solid #eee; border-radius: 10px; 
+            box-sizing: border-box; font-size: 15px; transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        .btn-auth { 
+            width: 100%; padding: 14px; background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white; border: none; border-radius: 10px; font-size: 16px; 
+            font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+        .toggle-link { text-align: center; margin-top: 20px; font-size: 14px; color: var(--primary); cursor: pointer; font-weight: 600; }
+        #message { text-align: center; margin-top: 15px; font-size: 13px; font-weight: 500; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <div class="logo-container">
+        <div class="logo-icon"><i class="fas fa-wallet" style="color: white; font-size: 28px;"></i></div>
+        <h1 class="logo-text">Mega <span>Wallet</span></h1>
+    </div>
+
+    <h2 id="auth-title">Créer un compte</h2>
+
+    <form id="authForm">
+        <div class="form-group" id="group-username">
+            <label><i class="fas fa-user"></i> Nom d'utilisateur</label>
+            <input type="text" id="username" placeholder="Ex: Jean225">
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-phone-alt"></i> Numéro de téléphone</label>
+            <input type="tel" id="telephone" placeholder="Ex: 0708091011" required>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div class="form-group" id="group-promo">
+            <label><i class="fas fa-gift"></i> Code Promo (Optionnel)</label>
+            <input type="text" id="input_promo" placeholder="Code parrain">
+        </div>
+
+        <button type="submit" id="btn-text" class="btn-auth">S'inscrire et Commencer</button>
+    </form>
+    
+    <div id="message"></div>
+    <div class="toggle-link" id="toggle-auth" onclick="toggleMode()">Déjà inscrit ? Se connecter</div>
+</div>
+
+<script>
+    let isLoginMode = false;
+    const API_URL = "https://backend-xxgf.onrender.com";
+
+    function toggleMode() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('auth-title').innerText = isLoginMode ? "Connexion" : "Créer un compte";
+        document.getElementById('btn-text').innerText = isLoginMode ? "Accéder à mon compte" : "S'inscrire et Commencer";
+        document.getElementById('toggle-auth').innerText = isLoginMode ? "Pas de compte ? Créer un compte" : "Déjà inscrit ? Se connecter";
+        
+        // On cache ou montre les champs inutiles en mode connexion
+        document.getElementById('group-username').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('group-promo').style.display = isLoginMode ? 'none' : 'block';
+    }
+
+    // Gestion automatique du code parrainage dans l'URL
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeRef = urlParams.get('ref'); 
+        if (codeRef) { document.getElementById('input_promo').value = codeRef; }
+        
+        // Si déjà connecté, on redirige vers user.html
+        if(localStorage.getItem('user')) {
+             window.location.href = "user.html";
+        }
+    };
+
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('message');
+        const endpoint = isLoginMode ? '/login' : '/register';
+        
+        const data = {
+            telephone: document.getElementById('telephone').value,
+            password: document.getElementById('password').value
+        };
+
+        if (!isLoginMode) {
+            data.username = document.getElementById('username').value;
+            data.promo_parrain = document.getElementById('input_promo').value || null;
+        }
+
+        msgDiv.style.color = "blue";
+        msgDiv.innerText = "Analyse des données...";
+
+        try {
+            const response = await fetch(API_URL + endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                msgDiv.style.color = "green";
+                msgDiv.innerText = "Succès ! Redirection...";
+
+                // Sauvegarde propre des infos pour user.html
+                // On s'assure d'inclure le mot de passe pour la fonction 'rafraichir' de user.html
+                const sessionUser = isLoginMode ? result.user : {
+                    id_public: result.id,
+                    code_promo: result.promo,
+                    telephone: data.telephone,
+                    username: data.username,
+                    balance: 0
+                };
+                sessionUser.password = data.password; 
+                
+                localStorage.setItem('user', JSON.stringify(sessionUser));
+                
+                // Redirection vers l'espace membre
+                setTimeout(() => { window.location.href = "user.html"; }, 1000);
+            } else {
+                msgDiv.style.color = "red";
+                msgDiv.innerText = result.message || "Erreur d'accès.";
+            }
+        } catch (error) {
+            msgDiv.style.color = "red";
+            msgDiv.innerText = "Serveur indisponible.";
+        }
+    });
+</script>
+</body>
+</html>
