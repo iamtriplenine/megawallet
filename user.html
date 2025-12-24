@@ -138,6 +138,26 @@
         <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
     </div>
 
+    <div class="info-section" style="border: 2px dashed var(--primary); background: #f0f7ff;">
+        <h4 style="margin-top:0; color:var(--primary); font-size: 15px;">
+            <i class="fas fa-gift"></i> Code Cadeau du jour
+        </h4>
+        <p style="font-size:11px; color:#636e72; margin-bottom: 10px;">
+            Trouvez le code secret sur notre <b>Canal Telegram</b> et recevez votre bonus !
+        </p>
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="code-bonus-saisi" placeholder="Code secret ici..." style="margin:0; flex:1;">
+            <button class="btn btn-deposit" style="margin:0; width:100px; font-size:13px; height:45px;" onclick="reclamerBonus()">Valider</button>
+        </div>
+    </div>
+
+    <div class="info-section" style="background: #fff9db; border: 1px solid #ffe066;">
+        <h4 style="margin-top:0; color:#f59f00; font-size: 14px;"><i class="fas fa-coins"></i> Jeu : Double ou Rien (50F)</h4>
+        <button class="btn" style="background:#f59f00; color:white; margin:0; padding:10px;" onclick="jouerPileFace()">
+            🪙 Tenter ma chance
+        </button>
+    </div>
+
     <div class="info-section">
         <div class="info-item"><span>ID Client</span><b id="user-id" style="color:var(--primary)">---</b></div>
         <div class="info-item" style="border:none; padding-bottom:0;"><span>Lien d'invitation (Commission 40%)</span></div>
@@ -217,7 +237,6 @@
     let userData = JSON.parse(localStorage.getItem('user'));
     const API = "https://backend-xxgf.onrender.com";
 
-    // Correction : On redirige vers index.html si l'utilisateur n'est pas trouvé
     if (!userData) window.location.href = "index.html";
 
     function toggleSection(id) {
@@ -244,7 +263,6 @@
                 localStorage.setItem('user', JSON.stringify(userData));
                 document.getElementById('user-balance').innerText = userData.balance;
 
-                // AJOUT : LOGIQUE POUR AFFICHER/MASQUER LA BULLE
                 const noticeBox = document.getElementById('admin-notice');
                 if(userData.message && userData.message.trim() !== "") {
                     document.getElementById('admin-text').innerText = userData.message;
@@ -264,19 +282,39 @@
         } catch(e) { console.log("Erreur serveur"); }
     }
 
+    // NOUVELLE FONCTION : RÉCLAMER BONUS TELEGRAM
+    async function reclamerBonus() {
+        const code = document.getElementById('code-bonus-saisi').value;
+        if(!code) return alert("Entrez un code !");
+        const res = await fetch(`${API}/reclamer-bonus`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ id_public_user: userData.id_public, code_saisi: code })
+        });
+        const data = await res.json();
+        alert(data.message);
+        if(res.ok) { document.getElementById('code-bonus-saisi').value = ""; rafraichir(); }
+    }
+
+    // NOUVELLE FONCTION : JOUER PILE OU FACE
+    async function jouerPileFace() {
+        if(!confirm("Miser 50 FCFA sur ce lancer ?")) return;
+        const res = await fetch(`${API}/jeu/pile-face`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ id_public_user: userData.id_public, mise: 50 })
+        });
+        const data = await res.json();
+        if(res.ok) {
+            alert(data.gagne ? "🎉 GAGNÉ ! +100 FCFA ajoutés !" : "❌ PERDU... Retentez votre chance !");
+            rafraichir();
+        } else { alert(data.message); }
+    }
+
     async function demanderRetrait() {
         const mtInput = document.getElementById('retrait-montant').value;
         const mt = parseFloat(mtInput);
-        
         if(isNaN(mt) || mt < 100) return alert("Minimum 100 FCFA");
-
-        // On rafraîchit les données avant de valider le solde
         await rafraichir();
-
-        if(parseFloat(userData.balance) < mt) {
-            return alert("Solde insuffisant ! Votre solde réel est de " + userData.balance + " FCFA.");
-        }
-
+        if(parseFloat(userData.balance) < mt) return alert("Solde insuffisant !");
         const res = await fetch(`${API}/retrait`, {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ 
@@ -286,14 +324,7 @@
                 numero: document.getElementById('retrait-numero').value 
             })
         });
-
-        if(res.ok) { 
-            alert("Demande de retrait transmise !");
-            await rafraichir(); 
-            toggleSection('none'); 
-        } else { 
-            alert("Une erreur est survenue lors de la demande.");
-        }
+        if(res.ok) { alert("Demande transmise !"); await rafraichir(); toggleSection('none'); }
     }
 
     async function envoyerPreuve() {
@@ -305,16 +336,12 @@
                 montant: document.getElementById('depot-montant').value 
             })
         });
-        if(res.ok) { alert("Dépôt enregistré ! En attente de vérification."); rafraichir(); toggleSection('none'); }
+        if(res.ok) { alert("Dépôt enregistré !"); rafraichir(); toggleSection('none'); }
     }
 
     document.getElementById('user-id').innerText = userData.id_public;
-    // Mise à jour du lien d'invitation pour pointer vers index.html
     document.getElementById('invite-link').innerText = window.location.origin + "/index.html?ref=" + userData.code_promo;
-    
     rafraichir();
-
-    // Correction : logout redirige maintenant vers index.html
     function logout() { localStorage.clear(); window.location.href = "index.html"; }
 </script>
 </body>
