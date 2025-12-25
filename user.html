@@ -17,12 +17,104 @@
             --warning: #e17055;   
             --bg: #f8f9fa;        
             --text: #2d3436;      
+            --card: white;
+            --border: #f1f1f1;
         }
 
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        /* === AJOUT DU DESIGN MINAGE (DESIGN 1) === */
+        .btn-crypto {
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            color: white !important;
+            border: none;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+            animation: pulse-gold 2s infinite;
+            margin-top: 10px;
+        }
+        @keyframes pulse-gold {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 4px 25px rgba(243, 156, 18, 0.6); }
+            100% { transform: scale(1); }
+        }
+        #page-mining { display: none; text-align: center; padding-top: 20px; }
+        .mining-btn {
+            width: 220px; height: 220px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            border: 8px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin: 40px auto;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; font-weight: 900; color: white;
+            cursor: pointer; position: relative;
+            user-select: none; transition: transform 0.1s;
+        }
+        .mining-btn:active { transform: scale(0.95); }
+        .coin-count { font-size: 48px; font-weight: 800; color: #f39c12; margin: 20px 0; }
+        .tap-effect { position: absolute; color: #f1c40f; font-weight: bold; font-size: 24px; pointer-events: none; animation: floatUp 0.8s ease-out forwards; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
+        /* === FIN DESIGN MINAGE === */
+
+        /* === CONFIGURATION DES THÈMES === */
+        [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; }
+        [data-theme="rose"] { --bg: #1a0f14; --text: #ffe4e6; --card: #2d1b24; --border: #4c2d3a; --primary: #fb7185; }
+        [data-theme="violet"] { --bg: #0f0a1a; --text: #f5f3ff; --card: #1c142e; --border: #3b2d5a; --primary: #8b5cf6; }
+        
+        [data-theme="black"] { 
+            --bg: #000000; 
+            --text: #ffffff; 
+            --card: #0a0a0a; 
+            --border: #222222; 
+            --primary: #ffffff; 
+        }
+        [data-theme="black"] .info-section, 
+        [data-theme="black"] .theme-menu,
+        [data-theme="black"] #form-recharge, 
+        [data-theme="black"] #form-retrait, 
+        [data-theme="black"] #guide-site, 
+        [data-theme="black"] #historique-box {
+            border: 1px solid #333;
+        }
+        [data-theme="black"] .guide-text, 
+        [data-theme="black"] .invite-box {
+            background: #111;
+            color: #ccc;
+        }
+        [data-theme="black"] input, [data-theme="black"] select {
+            background: #000;
+            color: #fff;
+            border-color: #333;
+        }
+
+        [data-theme="gold"] { 
+            --bg: #0d0b05; --text: #fef3c7; --card: #1e1a0d; --border: #453a1d; --primary: #d4af37; --secondary: #f3cf7a;
+        }
+        [data-theme="gold"] .balance-card {
+            background: linear-gradient(135deg, #d4af37, #f3cf7a, #996515);
+            position: relative;
+            overflow: hidden;
+        }
+        [data-theme="gold"] .balance-card::after {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shine-gold 3s infinite;
+        }
+        @keyframes shine-gold {
+            0% { transform: translateX(-150%) rotate(30deg); }
+            100% { transform: translateX(150%) rotate(30deg); }
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; transition: 0.3s; }
         .container { width: 100%; max-width: 480px; }
 
-        /* === AJOUT : STYLE DE LA BULLE VITRE (MESSAGE ADMIN) === */
+        .btn-theme-toggle { background: var(--card); color: var(--primary); border: 2px solid var(--primary); }
+        .theme-menu { display: none; background: var(--card); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .theme-btn-opt { border: none; padding: 10px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
         .glass-notice {
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(20px) saturate(160%);
@@ -32,7 +124,7 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-            display: none; /* Masqué par défaut */
+            display: none; 
             animation: slideIn 0.5s ease-out;
         }
         @keyframes slideIn {
@@ -42,54 +134,30 @@
         .glass-notice h4 { margin: 0 0 5px 0; font-size: 12px; color: var(--primary); text-transform: uppercase; font-weight: 700; }
         .glass-notice p { margin: 0; font-size: 15px; color: var(--text); font-weight: 600; }
 
-        /* === BARRE DE NAVIGATION HAUT === */
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .logo-small {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--text);
-        }
-        .logo-small i {
-            background: var(--primary);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
+        .navbar-brand { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .logo-small { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); }
+        .logo-small i { background: var(--primary); color: white; padding: 8px; border-radius: 8px; font-size: 14px; }
 
-        /* === DESIGN CARTE SOLDE === */
         .balance-card { 
             background: linear-gradient(135deg, var(--primary), var(--secondary)); 
             color: white; padding: 30px; border-radius: 24px; text-align: center; 
             box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2); margin-bottom: 25px; position: relative; 
-            overflow: hidden;
+            overflow: hidden; cursor: pointer;
         }
         .balance-amount { font-size: 38px; font-weight: 700; }
 
-        /* === SECTIONS BLANCHES === */
-        .info-section { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f1f1; font-size: 14px; }
-        
-        .invite-box { background: #f1f2f6; padding: 12px; border-radius: 12px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .info-section { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .invite-box { background: var(--bg); padding: 12px; border-radius: 12px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
 
-        /* === BOUTONS === */
         .btn { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
         .btn-deposit { background: var(--success); color: white; }
         .btn-withdraw { background: var(--warning); color: white; }
         .btn-history { background: #636e72; color: white; margin-top: 10px; }
-        .btn-info { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-info { background: var(--card); color: var(--primary); border: 2px solid var(--primary); }
         
-        #form-recharge, #form-retrait, #guide-site, #historique-box { display: none; background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        #form-recharge, #form-retrait, #guide-site, #historique-box { display: none; background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 
-        /* === BOUTON TELEGRAM ANIME === */
         .btn-telegram { 
             display: flex; align-items: center; justify-content: center; gap: 12px; 
             background: #0088cc; color: white; padding: 18px; border-radius: 15px; 
@@ -102,20 +170,19 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); }
         }
 
-        /* === GUIDE TEXTES === */
         .guide-title { color: var(--text); font-size: 17px; font-weight: 700; margin-top: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .guide-text { font-size: 13px; color: #636e72; line-height: 1.6; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); }
+        .guide-text { font-size: 13px; color: #636e72; line-height: 1.6; margin-bottom: 20px; background: var(--bg); padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); }
 
         table { width: 100%; font-size: 13px; border-collapse: collapse; }
-        td { padding: 10px 8px; border-bottom: 1px solid #eee; font-weight: 500; }
+        td { padding: 10px 8px; border-bottom: 1px solid var(--border); font-weight: 500; }
         .btn-logout { background: none; color: #fab1a0; border: none; cursor: pointer; width: 100%; text-decoration: underline; margin-top: 20px; font-weight: 600; }
         
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid var(--border); border-radius: 12px; box-sizing: border-box; background: var(--bg); color: var(--text); }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="main-content">
 
     <div class="navbar-brand">
         <div class="logo-small">
@@ -132,13 +199,36 @@
         <p id="admin-text"></p>
     </div>
     
-    <div class="balance-card">
+    <div class="balance-card" onclick="toggleBalance()">
         <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
         <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
         <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
     </div>
 
-    <div class="info-section" style="border: 2px dashed var(--primary); background: #f0f7ff;">
+    <button class="btn btn-theme-toggle" onclick="toggleThemeMenu()">
+        <i class="fas fa-palette"></i> Modifier le thème 
+    </button>
+
+    <button class="btn btn-crypto" onclick="showMining()">
+        <i class="fab fa-bitcoin"></i> Miner Mega Crypto 
+    </button>
+
+    <div id="theme-menu" class="theme-menu">
+        <div class="theme-grid">
+            <button class="theme-btn-opt" style="background:#000; border:1px solid #333" onclick="checkThemeAccess('black')">
+                All Black <i class="fas fa-lock" id="lock-black"></i>
+            </button>
+            <button class="theme-btn-opt" style="background:#0f172a" onclick="setTheme('dark')">Sombre</button>
+            <button class="theme-btn-opt" style="background:#2d1b24" onclick="setTheme('rose')">Rose</button>
+            <button class="theme-btn-opt" style="background:#1c142e" onclick="setTheme('violet')">Violet</button>
+            <button class="theme-btn-opt" style="background: linear-gradient(to right, #d4af37, #f3cf7a); color: #000" onclick="checkThemeAccess('gold')">
+                Gold <i class="fas fa-lock" id="lock-gold"></i>
+            </button>
+            <button class="theme-btn-opt" style="background:#007bff; grid-column: span 1" onclick="setTheme('light')">Clair</button>
+        </div>
+    </div>
+
+    <div class="info-section" style="border: 2px dashed var(--primary); background: rgba(0, 123, 255, 0.05);">
         <h4 style="margin-top:0; color:var(--primary); font-size: 15px;">
             <i class="fas fa-gift"></i> Code Cadeau du jour
         </h4>
@@ -151,7 +241,7 @@
         </div>
     </div>
 
-    <div class="info-section" style="background: #fff9db; border: 1px solid #ffe066;">
+    <div class="info-section" style="background: rgba(245, 159, 0, 0.1); border: 1px solid #ffe066;">
         <h4 style="margin-top:0; color:#f59f00; font-size: 14px;"><i class="fas fa-coins"></i> Jeu : Double ou Rien (50F)</h4>
         <button class="btn" style="background:#f59f00; color:white; margin:0; padding:10px;" onclick="jouerPileFace()">
             🪙 Tenter ma chance
@@ -174,7 +264,7 @@
 
     <div id="form-recharge">
         <h4 style="margin-top:0"><i class="fas fa-university"></i> Créditer mon compte</h4>
-        <p style="font-size: 12px; color: #636e72;">Envoyez les fonds au <b>07 99 07 72 88</b> via Orange/MTN/Wave, puis entrez l'ID de transaction ci-dessous :</p>
+        <p style="font-size: 12px; color: #636e72;">Envoyez les fonds au <b>+225 07 99 07 72 88</b> via Orange/MTN/Wave, puis entrez l'ID de transaction ci-dessous :</p>
         <input type="number" id="depot-montant" placeholder="Montant déposé (FCFA)">
         <input type="text" id="depot-id" placeholder="ID de la transaction (SMS)">
         <button class="btn btn-deposit" onclick="envoyerPreuve()">Confirmer le dépôt</button>
@@ -232,8 +322,163 @@
     <button class="btn btn-logout" onclick="logout()">Se déconnecter</button>
 </div>
 
+<div class="container" id="page-mining">
+    <div class="navbar-brand">
+        <div class="logo-small" onclick="hideMining()" style="cursor:pointer">
+            <i class="fas fa-arrow-left"></i>
+            <span>Retour</span>
+        </div>
+        <div style="font-weight: bold; color:#f39c12">MINEUR MEGA</div>
+    </div>
+    <div class="coin-count" id="mega-coins">0.00</div>
+    <p style="opacity: 0.7; font-size: 14px;">Tapotez pour miner des jetons MEGA</p>
+    <div class="mining-btn" onclick="mine(event)">MEGA</div>
+    <div class="info-section" style="margin-top: 30px;">
+        <p style="font-size: 12px; margin: 0;">100,000 MEGA = 50 FCFA</p>
+        <p style="font-size: 10px; opacity: 0.6;">(Bientôt échangeable contre FCFA)</p>
+    </div>
+</div>
+
 <script>
-    /* === LOGIQUE JAVASCRIPT MEGA WALLET === */
+    let isBalanceHidden = false;
+    let currentLockedTheme = "";
+
+    /* --- FONCTIONS MINAGE AJOUTÉES ET SYNCHRONISÉES --- */
+    let megaCoins = parseFloat(localStorage.getItem('mega_bal')) || 0;
+
+    // FONCTION POUR ENVOYER LES POINTS AU SERVEUR
+    async function synchroniserMinage() {
+        if (!userData) return;
+        try {
+            await fetch(`${API}/update-mining`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    id_public_user: userData.id_public, 
+                    mining_balance: megaCoins 
+                })
+            });
+            console.log("Synchro réussie : " + megaCoins);
+        } catch (e) {
+            console.error("Erreur synchro :", e);
+        }
+    }
+
+    // Synchronisation automatique toutes les 30 secondes
+    setInterval(synchroniserMinage, 30000);
+
+    function showMining() {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('page-mining').style.display = 'block';
+        document.getElementById('mega-coins').innerText = megaCoins.toFixed(2);
+    }
+    
+    function hideMining() {
+        synchroniserMinage(); // Synchronisation immédiate quand on quitte
+        document.getElementById('page-mining').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }
+    
+    function mine(e) {
+        megaCoins += 0.05;
+        document.getElementById('mega-coins').innerText = megaCoins.toFixed(2);
+        localStorage.setItem('mega_bal', megaCoins);
+        let eff = document.createElement('div');
+        eff.className = 'tap-effect';
+        eff.innerText = '+0.05';
+        eff.style.left = e.clientX + 'px';
+        eff.style.top = e.clientY + 'px';
+        document.body.appendChild(eff);
+        setTimeout(() => eff.remove(), 800);
+    }
+    /* --- FIN FONCTIONS MINAGE --- */
+
+    function toggleBalance() {
+        const balanceSpan = document.getElementById('user-balance');
+        isBalanceHidden = !isBalanceHidden;
+        if (isBalanceHidden) {
+            balanceSpan.innerText = "****";
+        } else {
+            balanceSpan.innerText = userData.balance;
+        }
+    }
+
+    function toggleThemeMenu() {
+        const menu = document.getElementById('theme-menu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        updateLocks();
+    }
+
+    function updateLocks() {
+        const themes = ['black', 'gold'];
+        themes.forEach(t => {
+            if(localStorage.getItem('unlocked-' + t)) {
+                document.getElementById('lock-' + t).className = "fas fa-check-circle";
+                document.getElementById('lock-' + t).style.color = "var(--success)";
+            }
+        });
+    }
+
+    async function checkThemeAccess(theme) {
+        if(localStorage.getItem('unlocked-' + theme)) {
+            setTheme(theme);
+        } else {
+            const oldTheme = localStorage.getItem('wallet-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            alert("Aperçu gratuit de 5 secondes activé !");
+            
+            setTimeout(() => {
+                document.documentElement.setAttribute('data-theme', oldTheme);
+                if(confirm("L'aperçu est fini. Débloquer ce thème définitivement pour 100 FCFA ?")) {
+                    buyTheme(theme);
+                }
+            }, 5000);
+        }
+    }
+
+    // === FONCTION ACHAT THÈME CORRIGÉE POUR ÉVITER LE BUG DU SOLDE ===
+    async function buyTheme(theme) {
+        const prix = 100;
+        if(parseFloat(userData.balance) < prix) return alert("Solde insuffisant (100 FCFA requis)");
+        
+        if(!confirm("Confirmer l'achat du thème " + theme + " pour " + prix + " FCFA ?")) return;
+
+        // On calcule le retrait de façon stricte ici
+        const nouveauSolde = parseFloat(userData.balance) - prix;
+
+        try {
+            const res = await fetch(`${API}/admin/modifier-solde`, {
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    cle: "999", 
+                    id_public_user: userData.id_public, 
+                    nouveau_solde: nouveauSolde 
+                })
+            });
+
+            if(res.ok) {
+                localStorage.setItem('unlocked-' + theme, 'true');
+                alert("Thème " + theme + " débloqué ! -100 FCFA");
+                setTheme(theme);
+                rafraichir(); // Pour mettre à jour l'affichage du solde immédiatement
+            } else {
+                alert("Erreur lors de la transaction sur le serveur.");
+            }
+        } catch (e) {
+            alert("Erreur réseau. Vérifiez votre connexion.");
+        }
+    }
+
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('wallet-theme', theme);
+        document.getElementById('theme-menu').style.display = 'none';
+    }
+    
+    const savedTheme = localStorage.getItem('wallet-theme');
+    if(savedTheme) setTheme(savedTheme);
+
     let userData = JSON.parse(localStorage.getItem('user'));
     const API = "https://backend-xxgf.onrender.com";
 
@@ -261,8 +506,9 @@
             if(data.success) {
                 userData = data.user;
                 localStorage.setItem('user', JSON.stringify(userData));
-                document.getElementById('user-balance').innerText = userData.balance;
-
+                if(!isBalanceHidden) {
+                    document.getElementById('user-balance').innerText = userData.balance;
+                }
                 const noticeBox = document.getElementById('admin-notice');
                 if(userData.message && userData.message.trim() !== "") {
                     document.getElementById('admin-text').innerText = userData.message;
@@ -271,7 +517,6 @@
                     noticeBox.style.display = 'none';
                 }
             }
-            
             const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
             const hdata = await hres.json();
             document.getElementById('table-historique').innerHTML = hdata.map(t => {
@@ -279,10 +524,9 @@
                 const color = t.statut.includes('attente') ? 'orange' : 'green';
                 return `<tr><td>${type}</td><td>${t.montant} F</td><td style="color:${color}">${t.statut.replace('retrait ','')}</td></tr>`;
             }).join('');
-        } catch(e) { console.log("Erreur serveur"); }
+        } catch(e) {}
     }
 
-    // NOUVELLE FONCTION : RÉCLAMER BONUS TELEGRAM
     async function reclamerBonus() {
         const code = document.getElementById('code-bonus-saisi').value;
         if(!code) return alert("Entrez un code !");
@@ -295,7 +539,6 @@
         if(res.ok) { document.getElementById('code-bonus-saisi').value = ""; rafraichir(); }
     }
 
-    // NOUVELLE FONCTION : JOUER PILE OU FACE
     async function jouerPileFace() {
         if(!confirm("Miser 50 FCFA sur ce lancer ?")) return;
         const res = await fetch(`${API}/jeu/pile-face`, {
