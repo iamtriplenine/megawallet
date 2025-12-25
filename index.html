@@ -3,87 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Wallet - Inscription & Connexion</title>
+    <title>Mega Wallet - Connexion</title>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/NGpJ6343/IMG_8321.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root { 
-            --primary: #007bff; 
-            --dark: #1a1a1a; 
-            --light: #f4f7f6; 
-            --accent: #6c5ce7;
+            --bg-body: #0f172a;       
+            --bg-card: #1e293b;       
+            --primary: #3b82f6;       
+            --text-main: #f1f5f9;     
+            --text-dim: #94a3b8;      
+            --input-bg: #0f172a;      
+            --border: #334155;        
         }
 
         body { 
             font-family: 'Poppins', sans-serif; 
-            background-color: var(--light); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
+            background-color: var(--bg-body); 
+            color: var(--text-main);
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; 
         }
 
         .auth-card { 
-            background: white; 
-            padding: 40px 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
-            width: 100%; 
-            max-width: 400px; 
+            background: var(--bg-card); 
+            padding: 35px 25px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+            width: 90%; max-width: 380px; 
+            border: 1px solid var(--border);
         }
 
-        .logo-container { text-align: center; margin-bottom: 25px; }
+        .logo-container { text-align: center; margin-bottom: 20px; }
         .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            width: 60px; height: 60px; border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            width: 55px; height: 55px; border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 10px; box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
+            margin: 0 auto 10px;
         }
-        .logo-text { font-size: 24px; font-weight: 700; color: var(--dark); margin: 0; }
-        .logo-text span { color: var(--primary); }
 
-        h2 { text-align: center; color: var(--dark); margin-bottom: 25px; font-size: 20px; }
+        h2 { text-align: center; margin-bottom: 25px; font-size: 19px; }
+        
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #636e72; }
-        input { 
-            width: 100%; padding: 12px 15px; border: 2px solid #eee; border-radius: 10px; 
-            box-sizing: border-box; font-size: 15px; transition: 0.3s;
+        label { display: block; margin-bottom: 6px; font-size: 12px; color: var(--text-dim); font-weight: 500; }
+        
+        input, select { 
+            width: 100%; padding: 13px; 
+            border: 1px solid var(--border); border-radius: 12px; 
+            background-color: var(--input-bg); color: #fff;
+            font-size: 14px; box-sizing: border-box; outline: none;
         }
-        input:focus { border-color: var(--primary); outline: none; }
+        input:focus { border-color: var(--primary); }
 
         .btn-auth { 
-            width: 100%; padding: 14px; background: linear-gradient(to right, var(--primary), var(--accent));
-            color: white; border: none; border-radius: 10px; font-size: 16px; 
-            font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%; padding: 14px; background: var(--primary);
+            color: white; border: none; border-radius: 12px; 
+            font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px;
         }
-        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
 
-        .toggle-link { text-align: center; margin-top: 20px; font-size: 14px; color: var(--primary); cursor: pointer; font-weight: 600; }
-        #message { text-align: center; margin-top: 15px; font-size: 13px; font-weight: 500; min-height: 20px; }
+        .toggle-link { text-align: center; margin-top: 20px; font-size: 13px; color: var(--primary); cursor: pointer; }
+        #message { text-align: center; margin-top: 15px; font-size: 13px; min-height: 20px; font-weight: 500; }
+        
+        .login-info { font-size: 11px; color: #fbbf24; text-align: center; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="auth-card">
     <div class="logo-container">
-        <div class="logo-icon"><i class="fas fa-wallet" style="color: white; font-size: 28px;"></i></div>
-        <h1 class="logo-text">Mega <span>Wallet</span></h1>
+        <div class="logo-icon"><i class="fas fa-wallet" style="color: white; font-size: 24px;"></i></div>
+        <div style="font-weight: 700; font-size: 22px;">Mega <span style="color:var(--primary)">Wallet</span></div>
     </div>
 
     <h2 id="auth-title">Créer un compte</h2>
 
+    <div id="old-user-info" class="login-info">
+        <i class="fas fa-info-circle"></i> Anciens : Connectez-vous avec votre numéro habituel sans indicatif.
+    </div>
+
     <form id="authForm">
-        <div class="form-group" id="group-username">
+        <div id="group-username" class="form-group">
             <label><i class="fas fa-user"></i> Nom d'utilisateur</label>
-            <input type="text" id="username" placeholder="Ex: Jean225">
+            <input type="text" id="username" placeholder="Ex: Jean_Pro">
+        </div>
+
+        <div class="form-group" id="group-country">
+            <label><i class="fas fa-globe"></i> Votre Pays (Nouveaux uniquement)</label>
+            <select id="country-select" onchange="updateIndicatif()">
+                <option value="" disabled selected>Choisir un pays</option>
+                <option value="+225">🇨🇮 Côte d'Ivoire (+225)</option>
+                <option value="+226">🇧🇫 Burkina Faso (+226)</option>
+                <option value="+221">🇸🇳 Sénégal (+221)</option>
+            </select>
         </div>
 
         <div class="form-group">
             <label><i class="fas fa-phone-alt"></i> Numéro de téléphone</label>
-            <input type="tel" id="telephone" placeholder="Ex: 0708091011" required>
+            <input type="tel" id="telephone" placeholder="Ex: 0708..." required>
         </div>
 
         <div class="form-group">
@@ -91,12 +109,12 @@
             <input type="password" id="password" placeholder="••••••••" required>
         </div>
 
-        <div class="form-group" id="group-promo">
-            <label><i class="fas fa-gift"></i> Code Promo (Optionnel)</label>
-            <input type="text" id="input_promo" placeholder="Code parrain">
+        <div id="group-promo" class="form-group">
+            <label><i class="fas fa-gift"></i> Code Promo</label>
+            <input type="text" id="input_promo" placeholder="Optionnel">
         </div>
 
-        <button type="submit" id="btn-text" class="btn-auth">S'inscrire et Commencer</button>
+        <button type="submit" id="btn-text" class="btn-auth">S'inscrire</button>
     </form>
     
     <div id="message"></div>
@@ -107,46 +125,58 @@
     let isLoginMode = false;
     const API_URL = "https://backend-xxgf.onrender.com";
 
+    if(localStorage.getItem('user')) {
+        window.location.href = "user.html";
+    }
+
+    function updateIndicatif() {
+        const select = document.getElementById('country-select');
+        const phoneInput = document.getElementById('telephone');
+        if(!isLoginMode) {
+            phoneInput.value = select.value;
+        }
+    }
+
     function toggleMode() {
         isLoginMode = !isLoginMode;
         document.getElementById('auth-title').innerText = isLoginMode ? "Connexion" : "Créer un compte";
-        document.getElementById('btn-text').innerText = isLoginMode ? "Accéder à mon compte" : "S'inscrire et Commencer";
-        document.getElementById('toggle-auth').innerText = isLoginMode ? "Pas de compte ? Créer un compte" : "Déjà inscrit ? Se connecter";
+        document.getElementById('btn-text').innerText = isLoginMode ? "Se connecter" : "S'inscrire";
+        document.getElementById('toggle-auth').innerText = isLoginMode ? "Nouveau ? Créer un compte" : "Déjà inscrit ? Se connecter";
         
-        // On cache ou montre les champs inutiles en mode connexion
+        // Cacher le choix du pays en mode connexion pour permettre la saisie libre (anciens numéros)
         document.getElementById('group-username').style.display = isLoginMode ? 'none' : 'block';
         document.getElementById('group-promo').style.display = isLoginMode ? 'none' : 'block';
-    }
-
-    // Gestion automatique du code parrainage dans l'URL
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const codeRef = urlParams.get('ref'); 
-        if (codeRef) { document.getElementById('input_promo').value = codeRef; }
+        document.getElementById('group-country').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('old-user-info').style.display = isLoginMode ? 'block' : 'none';
         
-        // Si déjà connecté, on redirige vers user.html
-        if(localStorage.getItem('user')) {
-             window.location.href = "user.html";
-        }
-    };
+        document.getElementById('telephone').value = "";
+        document.getElementById('message').innerText = "";
+    }
 
     document.getElementById('authForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const msgDiv = document.getElementById('message');
-        const endpoint = isLoginMode ? '/login' : '/register';
         
+        // En mode inscription, on vérifie l'indicatif
+        if(!isLoginMode && !document.getElementById('country-select').value) {
+            msgDiv.style.color = "#f87171";
+            msgDiv.innerText = "Sélectionnez votre pays pour l'indicatif.";
+            return;
+        }
+
+        const endpoint = isLoginMode ? '/login' : '/register';
         const data = {
-            telephone: document.getElementById('telephone').value,
-            password: document.getElementById('password').value
+            telephone: document.getElementById('telephone').value.trim(),
+            password: document.getElementById('password').value.trim()
         };
 
         if (!isLoginMode) {
-            data.username = document.getElementById('username').value;
-            data.promo_parrain = document.getElementById('input_promo').value || null;
+            data.username = document.getElementById('username').value.trim();
+            data.promo_parrain = document.getElementById('input_promo').value.trim() || null;
         }
 
-        msgDiv.style.color = "blue";
-        msgDiv.innerText = "Analyse des données...";
+        msgDiv.style.color = "#3b82f6";
+        msgDiv.innerText = "Chargement...";
 
         try {
             const response = await fetch(API_URL + endpoint, {
@@ -158,12 +188,10 @@
             const result = await response.json();
 
             if (result.success) {
-                msgDiv.style.color = "green";
-                msgDiv.innerText = "Succès ! Redirection...";
-
-                // Sauvegarde propre des infos pour user.html
-                // On s'assure d'inclure le mot de passe pour la fonction 'rafraichir' de user.html
-                const sessionUser = isLoginMode ? result.user : {
+                msgDiv.style.color = "#4ade80";
+                msgDiv.innerText = "Succès !";
+                
+                let sessionUser = isLoginMode ? result.user : {
                     id_public: result.id,
                     code_promo: result.promo,
                     telephone: data.telephone,
@@ -173,18 +201,19 @@
                 sessionUser.password = data.password; 
                 
                 localStorage.setItem('user', JSON.stringify(sessionUser));
-                
-                // Redirection vers l'espace membre
-                setTimeout(() => { window.location.href = "user.html"; }, 1000);
+                setTimeout(() => { window.location.href = "user.html"; }, 800);
             } else {
-                msgDiv.style.color = "red";
-                msgDiv.innerText = result.message || "Erreur d'accès.";
+                msgDiv.style.color = "#f87171";
+                msgDiv.innerText = result.message || "Erreur de connexion.";
             }
         } catch (error) {
-            msgDiv.style.color = "red";
-            msgDiv.innerText = "Serveur indisponible.";
+            msgDiv.style.color = "#f87171";
+            msgDiv.innerText = "Serveur non joignable.";
         }
     });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('ref')) { document.getElementById('input_promo').value = urlParams.get('ref'); }
 </script>
 </body>
 </html>
