@@ -47,12 +47,23 @@
             font-size: 40px; font-weight: 900; color: white;
             cursor: pointer; position: relative;
             user-select: none; transition: transform 0.1s;
+
+
+
+
         }
         .mining-btn:active { transform: scale(0.95); }
         .coin-count { font-size: 48px; font-weight: 800; color: #f39c12; margin: 20px 0; }
         .tap-effect { position: absolute; color: #f1c40f; font-weight: bold; font-size: 24px; pointer-events: none; animation: floatUp 0.8s ease-out forwards; }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
         /* === FIN DESIGN MINAGE === */
+
+
+
+
+
+
+
 
         /* === CONFIGURATION DES THÈMES === */
         [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; }
@@ -199,11 +210,23 @@
         <p id="admin-text"></p>
     </div>
     
+
+
     <div class="balance-card" onclick="toggleBalance()">
-        <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
-        <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
-        <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
+    <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
+    <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
+    
+    <div onclick="copierAdresse(event)" style="margin-top: 12px; font-size: 13px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 10px; display: inline-block; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;">
+        <span style="opacity: 0.7; font-size: 11px;">ADRESSE :</span> 
+        <span id="user-wallet" style="font-family: monospace; font-weight: 600; margin-left: 5px; letter-spacing: 0.5px;">0x********</span>
+        <i class="fas fa-copy" style="margin-left: 8px; opacity: 0.6; font-size: 12px;"></i>
     </div>
+
+    <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
+</div>
+
+
+
 
     <button class="btn btn-theme-toggle" onclick="toggleThemeMenu()">
         <i class="fas fa-palette"></i> Modifier le thème 
@@ -248,14 +271,20 @@
         </button>
     </div>
 
-    <div class="info-section">
-        <div class="info-item"><span>ID Client</span><b id="user-id" style="color:var(--primary)">---</b></div>
-        <div class="info-item" style="border:none; padding-bottom:0;"><span>Lien d'invitation (Commission 40%)</span></div>
-        <div class="invite-box">
-            <span id="invite-link">Chargement...</span>
-            <i class="fas fa-copy" onclick="copyLink()" style="cursor:pointer; color:var(--primary); font-size: 16px;"></i>
-        </div>
+
+<div class="info-section">
+    <div class="info-item"><span>ID Client</span><b id="user-id" style="color:var(--primary)">---</b></div>
+    <div class="info-item" style="border:none; padding-bottom:0;">
+        <span>Lien d'invitation (Commission <span id="taux-commission-header">--</span>%)</span>
     </div>
+    <div class="invite-box">
+        <span id="invite-link">Chargement...</span>
+        <i class="fas fa-copy" onclick="copyLink()" style="cursor:pointer; color:var(--primary); font-size: 16px;"></i>
+    </div>
+</div>
+
+
+
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
         <button class="btn btn-deposit" onclick="toggleSection('form-recharge')">📥 Dépôt</button>
@@ -393,15 +422,50 @@
     }
     /* --- FIN FONCTIONS MINAGE --- */
 
+
+
+
+
     function toggleBalance() {
-        const balanceSpan = document.getElementById('user-balance');
-        isBalanceHidden = !isBalanceHidden;
-        if (isBalanceHidden) {
-            balanceSpan.innerText = "****";
-        } else {
-            balanceSpan.innerText = userData.balance;
-        }
+    const balanceSpan = document.getElementById('user-balance');
+    const walletSpan = document.getElementById('user-wallet'); // On cible la nouvelle zone d'adresse
+    
+    isBalanceHidden = !isBalanceHidden;
+    
+    if (isBalanceHidden) {
+        balanceSpan.innerText = "****";
+        walletSpan.innerText = "0x********"; // Masque l'adresse avec des étoiles
+    } else {
+        balanceSpan.innerText = userData.balance;
+        // Affiche l'adresse réelle stockée dans les données de l'utilisateur
+        walletSpan.innerText = userData.wallet_address || "Indisponible";
     }
+}
+
+// Fonction ajoutée pour copier l'adresse
+function copierAdresse(event) {
+    // Empêche le clic de fermer/ouvrir le solde en même temps
+    event.stopPropagation();
+    
+    if (isBalanceHidden) {
+        alert("Affichez le solde pour copier l'adresse.");
+        return;
+    }
+
+    const adresse = userData.wallet_address;
+    if (adresse) {
+        navigator.clipboard.writeText(adresse).then(() => {
+            // Petit message de confirmation
+            alert("Adresse copiée !");
+        }).catch(err => {
+            console.error('Erreur lors de la copie : ', err);
+        });
+    }
+}
+
+
+
+
 
     function toggleThemeMenu() {
         const menu = document.getElementById('theme-menu');
@@ -496,36 +560,53 @@
         alert("Lien d'affiliation copié !"); 
     }
 
+    
+
+
+
+
+
+
     async function rafraichir() {
-        try {
-            const res = await fetch(`${API}/login`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ telephone: userData.telephone, password: userData.password })
-            });
-            const data = await res.json();
-            if(data.success) {
-                userData = data.user;
-                localStorage.setItem('user', JSON.stringify(userData));
-                if(!isBalanceHidden) {
-                    document.getElementById('user-balance').innerText = userData.balance;
-                }
-                const noticeBox = document.getElementById('admin-notice');
-                if(userData.message && userData.message.trim() !== "") {
-                    document.getElementById('admin-text').innerText = userData.message;
-                    noticeBox.style.display = 'block';
-                } else {
-                    noticeBox.style.display = 'none';
-                }
+    try {
+        const res = await fetch(`${API}/login`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ telephone: userData.telephone, password: userData.password })
+        });
+        const data = await res.json();
+        if(data.success) {
+            userData = data.user;
+            localStorage.setItem('user', JSON.stringify(userData));
+            
+            if(!isBalanceHidden) {
+                document.getElementById('user-balance').innerText = userData.balance;
+                // --- AJOUT : Mise à jour de l'adresse lors du rafraîchissement ---
+                document.getElementById('user-wallet').innerText = userData.wallet_address || "0x********";
             }
-            const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
-            const hdata = await hres.json();
-            document.getElementById('table-historique').innerHTML = hdata.map(t => {
-                const type = t.statut.includes('retrait') ? '📤 Retrait' : '📥 Dépôt';
-                const color = t.statut.includes('attente') ? 'orange' : 'green';
-                return `<tr><td>${type}</td><td>${t.montant} F</td><td style="color:${color}">${t.statut.replace('retrait ','')}</td></tr>`;
-            }).join('');
-        } catch(e) {}
-    }
+
+            const noticeBox = document.getElementById('admin-notice');
+            if(userData.message && userData.message.trim() !== "") {
+                document.getElementById('admin-text').innerText = userData.message;
+                noticeBox.style.display = 'block';
+            } else {
+                noticeBox.style.display = 'none';
+            }
+        }
+        const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
+        const hdata = await hres.json();
+        document.getElementById('table-historique').innerHTML = hdata.map(t => {
+            const type = t.statut.includes('retrait') ? '📤 Retrait' : '📥 Dépôt';
+            const color = t.statut.includes('attente') ? 'orange' : 'green';
+            return `<tr><td>${type}</td><td>${t.montant} F</td><td style="color:${color}">${t.statut.replace('retrait ','')}</td></tr>`;
+        }).join('');
+    } catch(e) {}
+}
+
+
+
+
+
+
 
     async function reclamerBonus() {
         const code = document.getElementById('code-bonus-saisi').value;
@@ -581,6 +662,52 @@
         });
         if(res.ok) { alert("Dépôt enregistré !"); rafraichir(); toggleSection('none'); }
     }
+
+
+
+
+
+    // --- NOUVEAU : SYSTÈME DE POURCENTAGE DYNAMIQUE ---
+// Cette fonction demande au serveur le taux actuel pour l'afficher partout
+async function chargerTauxDynamique() {
+    try {
+        const res = await fetch(`${API}/config/taux-parrainage`);
+        const data = await res.json();
+        
+        // Mise à jour du taux dans la section "Lien d'invitation"
+        const headerTaux = document.getElementById('taux-commission-header');
+        if(headerTaux) headerTaux.innerText = data.taux;
+        
+        // Mise à jour du taux dans le titre du Guide (section 3)
+        const guideTitre = document.getElementById('taux-reel');
+        if(guideTitre) guideTitre.innerText = data.taux;
+        
+        // Mise à jour du taux dans le texte explicatif du Guide
+        const guideTexte = document.getElementById('taux-reel-text');
+        if(guideTexte) guideTexte.innerText = data.taux;
+
+    } catch(e) { 
+        console.log("Erreur de chargement du taux, utilisation du taux par défaut (40%)");
+        // En cas d'erreur, on peut forcer l'affichage à 40 par sécurité
+        if(document.getElementById('taux-commission-header')) {
+            document.getElementById('taux-commission-header').innerText = "40";
+        }
+    }
+}
+
+// --- IMPORTANT : LANCEMENT AU CHARGEMENT ---
+// On lance la fonction dès que la page s'ouvre
+chargerTauxDynamique();
+
+
+
+
+
+
+
+
+
+
 
     document.getElementById('user-id').innerText = userData.id_public;
     document.getElementById('invite-link').innerText = window.location.origin + "/index.html?ref=" + userData.code_promo;
