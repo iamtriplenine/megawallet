@@ -212,14 +212,23 @@
     
 
 
-    <div class="balance-card" onclick="toggleBalance()">
-    <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
-    <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
+   <div class="balance-card">
+    <div onclick="toggleBalance()" style="cursor: pointer;">
+        <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
+        <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
+    </div>
     
     <div onclick="copierAdresse(event)" style="margin-top: 12px; font-size: 13px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 10px; display: inline-block; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;">
         <span style="opacity: 0.7; font-size: 11px;">ADRESSE :</span> 
         <span id="user-wallet" style="font-family: monospace; font-weight: 600; margin-left: 5px; letter-spacing: 0.5px;">0x********</span>
         <i class="fas fa-copy" style="margin-left: 8px; opacity: 0.6; font-size: 12px;"></i>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <button onclick="ouvrirTransfert()" style="width: 100%; background: rgba(0,0,0,0.2); color: var(--text); border: 1px solid var(--primary); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px;">
+            <i class="fas fa-paper-plane" style="color: var(--primary); font-size: 12px;"></i>
+            Transférer
+        </button>
     </div>
 
     <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
@@ -580,7 +589,6 @@ function copierAdresse(event) {
             
             if(!isBalanceHidden) {
                 document.getElementById('user-balance').innerText = userData.balance;
-                // --- AJOUT : Mise à jour de l'adresse lors du rafraîchissement ---
                 document.getElementById('user-wallet').innerText = userData.wallet_address || "0x********";
             }
 
@@ -592,17 +600,52 @@ function copierAdresse(event) {
                 noticeBox.style.display = 'none';
             }
         }
+
+        // --- RÉCUPÉRATION ET AFFICHAGE DE L'HISTORIQUE ---
         const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
         const hdata = await hres.json();
+        
         document.getElementById('table-historique').innerHTML = hdata.map(t => {
-            const type = t.statut.includes('retrait') ? '📤 Retrait' : '📥 Dépôt';
-            const color = t.statut.includes('attente') ? 'orange' : 'green';
-            return `<tr><td>${type}</td><td>${t.montant} F</td><td style="color:${color}">${t.statut.replace('retrait ','')}</td></tr>`;
-        }).join('');
-    } catch(e) {}
+            let type = '';
+            let color = 'green';
+            let libelleStatut = t.statut;
+
+            // Logique de tri par type de transaction
+            if (t.statut.includes('retrait')) {
+                type = '📤 Retrait';
+                color = t.statut.includes('attente') ? 'orange' : 'red';
+                libelleStatut = t.statut.replace('retrait ', '');
+            } 
+            else if (t.statut.includes('Transfert vers')) {
+                // Transfert que l'utilisateur a ENVOYÉ
+                type = '💸 Envoyé';
+                color = '#8b5cf6'; // Violet pour le transfert
+                libelleStatut = 'Succès';
+            }
+            else if (t.statut.includes('Reçu de')) {
+                // Transfert que l'utilisateur a REÇU (si tu l'ajoutes au backend plus tard)
+                type = '💰 Reçu';
+                color = 'var(--success)';
+                libelleStatut = 'Validé';
+            }
+            else {
+                // Par défaut c'est un dépôt
+                type = '📥 Dépôt';
+                color = t.statut.includes('attente') ? 'orange' : 'green';
+            }
+
+            return `
+                <tr>
+                    <td style="font-size: 12px;">${type}</td>
+                    <td style="font-weight: bold;">${t.montant} F</td>
+                    <td style="color:${color}; font-size: 11px; font-weight: 600;">${libelleStatut}</td>
+                </tr>`;
+        }).join('') || '<tr><td colspan="3" style="text-align:center; opacity:0.5;">Aucune transaction</td></tr>';
+
+    } catch(e) {
+        console.error("Erreur rafraîchissement:", e);
+    }
 }
-
-
 
 
 
@@ -650,6 +693,65 @@ function copierAdresse(event) {
         });
         if(res.ok) { alert("Demande transmise !"); await rafraichir(); toggleSection('none'); }
     }
+
+
+
+// --- NOUVEAU : SYSTÈME DE TRANSFERT ENTRE UTILISATEURS ---
+async function ouvrirTransfert() {
+    // 1. Demander l'adresse du destinataire
+    const adresseDest = prompt("Entrez l'ADRESSE WALLET du destinataire (0x...) :");
+    if (!adresseDest || adresseDest.trim() === "") return;
+
+    // Sécurité : ne pas s'envoyer à soi-même
+    if (adresseDest === userData.wallet_address) {
+        return alert("Vous ne pouvez pas vous envoyer d'argent à vous-même.");
+    }
+
+    // 2. Demander le montant
+    const mtSaisi = prompt("Montant à transférer (FCFA) :");
+    const montant = parseFloat(mtSaisi);
+
+    if (isNaN(montant) || montant < 10) {
+        return alert("Montant invalide (Minimum 10 FCFA).");
+    }
+
+    // 3. Vérifier le solde avant d'appeler le serveur
+    if (parseFloat(userData.balance) < montant) {
+        return alert("Solde insuffisant pour ce transfert.");
+    }
+
+    // 4. Confirmation finale
+    if (!confirm(`Confirmez-vous l'envoi de ${montant} FCFA vers l'adresse ${adresseDest} ?`)) return;
+
+    try {
+        const res = await fetch(`${API}/transfert-wallet`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                id_public_expediteur: userData.id_public, 
+                adresse_destinataire: adresseDest, 
+                montant: montant 
+            })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("✅ Transfert effectué avec succès !");
+            rafraichir(); // Met à jour ton solde immédiatement
+        } else {
+            alert("❌ Échec : " + (data.message || "Erreur inconnue"));
+        }
+    } catch (e) {
+        alert("❌ Erreur réseau. Impossible de joindre le serveur.");
+    }
+}
+
+
+
+
+
+
 
     async function envoyerPreuve() {
         const res = await fetch(`${API}/depot`, {
