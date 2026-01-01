@@ -21,6 +21,140 @@
             --border: #f1f1f1;
         }
 
+
+
+
+
+
+
+
+
+        /* Style de la barre de navigation en bas */
+.mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px; /* Aligné sur ton container */
+    height: 65px;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    border-radius: 20px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #636e72;
+    font-size: 11px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+/* --- EFFET LUMINEUX SANS BARRE --- */
+.nav-item.active {
+    color: var(--primary) !important;
+    transition: all 0.3s ease;
+}
+
+/* Lueur intense sur l'icône */
+.nav-item.active i {
+    /* Plusieurs couches d'ombres pour un effet de néon profond */
+    filter: drop-shadow(0 0 2px var(--primary)) 
+            drop-shadow(0 0 10px var(--primary)) 
+            drop-shadow(0 0 20px var(--primary));
+    transform: scale(1.1); /* L'icône grossit légèrement pour marquer la sélection */
+}
+
+/* Lueur douce sur le texte pour l'accompagner */
+.nav-item.active span {
+    text-shadow: 0 0 8px var(--primary);
+    font-weight: bold;
+}
+
+/* Animation de pulsation de la lumière */
+@keyframes neon-pulse {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 10px var(--primary)); }
+    50% { filter: drop-shadow(0 0 5px var(--primary)) drop-shadow(0 0 25px var(--primary)); }
+}
+
+.nav-item.active i {
+    animation: neon-pulse 1.5s infinite ease-in-out;
+}
+
+
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* Espacement pour que le contenu ne soit pas caché derrière la barre */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding-bottom: 80px !important;
+}
+
+/* Masquer les sections de pages par défaut */
+.page-section {
+    width: 100%;
+    max-width: 480px; /* Même largeur que ton container principal */
+    margin: 0 auto;   /* Centre la page sur l'écran */
+    padding-bottom: 100px; /* Espace pour ne pas cacher le contenu derrière la barre de navigation */
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+
+
+
+
+.affilie-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--bg); /* Utilise la couleur de fond du thème */
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+.affilie-id { font-weight: 600; font-size: 13px; }
+.affilie-gain { color: var(--success); font-weight: 700; font-size: 13px; }
+.affilie-info { font-size: 10px; opacity: 0.6; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /* === AJOUT DU DESIGN MINAGE (DESIGN 1) === */
         .btn-crypto {
             background: linear-gradient(135deg, #f39c12, #f1c40f);
@@ -281,16 +415,7 @@
     </div>
 
 
-<div class="info-section">
-    <div class="info-item"><span>ID Client</span><b id="user-id" style="color:var(--primary)">---</b></div>
-    <div class="info-item" style="border:none; padding-bottom:0;">
-        <span>Lien d'invitation (Commission <span id="taux-commission-header">--</span>%)</span>
-    </div>
-    <div class="invite-box">
-        <span id="invite-link">Chargement...</span>
-        <i class="fas fa-copy" onclick="copyLink()" style="cursor:pointer; color:var(--primary); font-size: 16px;"></i>
-    </div>
-</div>
+
 
 
 
@@ -377,6 +502,192 @@
     </div>
 </div>
 
+
+
+
+
+
+<nav class="mobile-nav">
+    <div class="nav-item active" onclick="switchPage('home', this)">
+        <i class="fas fa-wallet"></i>
+        <span>Portefeuille</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('invite', this)">
+        <i class="fas fa-users"></i>
+        <span>Invités</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('invest', this)">
+        <i class="fas fa-chart-line"></i>
+        <span>Invest</span>
+    </div>
+
+    <div class="nav-item" onclick="switchPage('game', this)">
+        <i class="fas fa-gamepad"></i>
+        <span>Game</span>
+    </div> 
+
+
+    <div class="nav-item" onclick="switchPage('profil', this)">
+        <i class="fas fa-user-circle"></i>
+        <span>Profil</span>
+    </div>
+</nav>
+
+
+
+
+<div id="page-invite" class="page-section" style="display:none;">
+    <div class="navbar-brand">
+        <div class="logo-small">
+            <i class="fas fa-users"></i>
+            <span>Mes <span style="color:var(--primary)">Affiliés</span></span>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+        <div class="info-section" style="margin-bottom:0; text-align:center;">
+            <div style="font-size: 10px; opacity: 0.7; text-transform: uppercase;">Total Invités</div>
+            <div id="count-affilies" style="font-size: 22px; font-weight: 700; color: var(--primary);">0</div>
+        </div>
+        <div class="info-section" style="margin-bottom:0; text-align:center;">
+            <div style="font-size: 10px; opacity: 0.7; text-transform: uppercase;">Gains Reçus</div>
+            <div id="gains-affilies" style="font-size: 22px; font-weight: 700; color: var(--success);">0 F</div>
+        </div>
+    </div>
+
+    <div class="info-section" style="margin-bottom: 20px; border: 1px dashed var(--primary); background: rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 12px; font-weight: 600;">Code : <span id="user-promo-code" style="color:var(--primary)">----</span></span>
+            <span style="font-size: 10px; background: var(--primary); color: white; padding: 3px 8px; border-radius: 20px;">
+                Commission : <span id="taux-reel-page">40</span>%
+            </span>
+        </div>
+        
+        <div style="font-size: 11px; margin-bottom: 8px; opacity: 0.8;">Partager mon lien :</div>
+        <div style="background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span id="invite-link-page" style="font-size: 11px; word-break: break-all; opacity: 0.7; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 80%;">---</span>
+            <i class="fas fa-copy" onclick="copyLink()" style="cursor:pointer; color:var(--primary); font-size: 16px;"></i>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <h4 style="margin-top:0; font-size:13px; opacity:0.8;"><i class="fas fa-list"></i> Historique des parrainages</h4>
+        <div id="liste-affilies">
+            </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div id="page-invest" class="page-section" style="display:none;">
+    <h3 style="text-align:center">Machines d'Investissement</h3>
+    <p style="text-align:center; opacity:0.6">Bientôt disponible...</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="page-game" class="page-section" style="display:none;">
+    <div class="navbar-brand">
+        <div class="logo-small">
+            <i class="fas fa-gamepad"></i>
+            <span>Mega <span style="color:var(--primary)">Games</span></span>
+        </div>
+    </div>
+
+    <div class="info-section" style="text-align: center; padding: 50px 20px;">
+        <i class="fas fa-layer-group" style="font-size: 40px; opacity: 0.1; margin-bottom: 20px;"></i>
+        <h3 style="margin-bottom: 10px;">Espace Jeux</h3>
+        <p style="font-size: 13px; opacity: 0.6; line-height: 1.6;">
+            Cette section est actuellement Indisponible <br>
+            
+        </p>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="page-profil" class="page-section" style="display:none;">
+    <div class="navbar-brand">
+        <div class="logo-small">
+            <i class="fas fa-user-circle"></i>
+            <span>Mon <span style="color:var(--primary)">Espace</span></span>
+        </div>
+    </div>
+
+    <div class="info-section" style="text-align: center; padding: 30px 20px;">
+        <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 35px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <i class="fas fa-user"></i>
+        </div>
+        <h2 id="profil-username" style="margin: 0; font-size: 18px;">Utilisateur</h2>
+        <p id="profil-phone" style="opacity: 0.6; font-size: 13px; margin: 5px 0;">+225 00000000</p>
+    </div>
+
+    <div class="info-section">
+        <h4 style="margin-top:0; font-size:14px; opacity:0.8;"><i class="fas fa-id-card"></i> Détails du compte</h4>
+        
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border);">
+            <span style="font-size: 13px; opacity: 0.7;">ID Utilisateur</span>
+            <span id="profil-id" style="font-weight: 600; font-size: 13px;">#000000</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border);">
+            <span style="font-size: 13px; opacity: 0.7;">Statut du compte</span>
+            <span style="color: var(--success); font-weight: 600; font-size: 12px;"><i class="fas fa-check-circle"></i> Vérifié</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+            <span style="font-size: 13px; opacity: 0.7;">Langue</span>
+            <span style="font-size: 13px;">Français (FR)</span>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <h4 style="margin-top:0; font-size:14px; opacity:0.8;"><i class="fas fa-shield-alt"></i> Sécurité & Support</h4>
+        
+        <button class="btn-primary" style="width:100%; margin-bottom: 10px; background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 13px; text-align: left; padding: 12px;">
+            <i class="fas fa-lock" style="margin-right: 10px; color: var(--primary);"></i> Modifier le mot de passe
+        </button>
+
+        <button onclick="window.open('https://t.me/MEGA_wallet_invest', '_blank')" 
+        class="btn-primary" 
+        style="width:100%; background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 13px; text-align: left; padding: 12px; cursor: pointer; border-radius: 10px;">
+    <i class="fab fa-telegram" style="margin-right: 10px; color: #0088cc; font-size: 16px;"></i> 
+    Contacter le Support
+</button>
+    </div>
+
+    <button onclick="logout()" style="width:100%; background: #ff4757; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; margin-top: 10px; cursor: pointer; transition: 0.3s;">
+        <i class="fas fa-sign-out-alt"></i> SE DÉCONNECTER
+    </button>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
     let isBalanceHidden = false;
     let currentLockedTheme = "";
@@ -430,6 +741,177 @@
         setTimeout(() => eff.remove(), 800);
     }
     /* --- FIN FONCTIONS MINAGE --- */
+
+
+
+
+
+
+/**
+ * Fonction pour changer de page sans recharger
+ * @param {string} pageId - L'ID de la page à afficher
+ * @param {HTMLElement} element - L'élément cliqué pour activer le style
+ */
+/**
+ * Gère la navigation entre les différentes sections de l'application
+ * @param {string} pageId - L'identifiant de la page (home, game, invest, invite, profil)
+ * @param {HTMLElement} element - L'élément de menu cliqué pour le style actif
+ */
+function switchPage(pageId, element) {
+    // 1. Liste complète de toutes les sections pour un masquage propre
+    const sections = [
+        'main-content', 
+        'page-game', 
+        'page-invite', 
+        'page-invest', 
+        'page-profil', 
+        'page-mining'
+    ];
+
+    // On masque chaque section si elle existe dans le document
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) section.style.display = 'none';
+    });
+
+    // 2. Affichage de la section demandée
+    if (pageId === 'home') {
+        document.getElementById('main-content').style.display = 'block';
+    } else {
+        const targetPage = document.getElementById('page-' + pageId);
+        if (targetPage) {
+            targetPage.style.display = 'block';
+        }
+    }
+
+    // 3. Gestion visuelle de la barre de navigation (état actif)
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    if (element) {
+        element.classList.add('active');
+    }
+
+    // 4. Chargement dynamique des données selon la page sélectionnée
+    if (pageId === 'invite') {
+        chargerAffiliesVisual();
+    }
+    
+    if (pageId === 'profil') {
+        chargerProfilVisual();
+    }
+
+    // Note: On peut ajouter ici d'autres fonctions pour 'game' ou 'invest' plus tard
+}
+
+
+
+
+
+
+
+
+/**
+ * Charge la liste des affiliés et calcule les gains
+ * Se base sur le taux de commission dynamique récupéré du serveur
+ */
+// Fonction pour charger et afficher les statistiques de parrainage
+async function chargerAffiliesVisual() {
+    if (!userData) return;
+
+    try {
+        // 1. Mise à jour des informations de parrainage sur la page
+        document.getElementById('user-promo-code').innerText = userData.code_promo;
+        
+        // On génère le lien propre
+        const domaine = (window.location.origin.includes('file://')) ? "https://megawallet.com" : window.location.origin;
+        document.getElementById('invite-link-page').innerText = domaine + "/index.html?ref=" + userData.code_promo;
+
+        // 2. Récupération du taux et des affiliés
+        const resTaux = await fetch(`${API}/config/taux-parrainage`);
+        const dataTaux = await resTaux.json();
+        const taux = parseFloat(dataTaux.taux || 40);
+        
+        // Affichage du taux dans le petit badge
+        document.getElementById('taux-reel-page').innerText = taux;
+
+        const res = await fetch(`${API}/user/affilies/${userData.id_public}`);
+        const affilies = await res.json();
+
+        const container = document.getElementById('liste-affilies');
+        const countLabel = document.getElementById('count-affilies');
+        const gainsLabel = document.getElementById('gains-affilies');
+
+        let totalGains = 0;
+        
+        if (Array.isArray(affilies)) {
+            countLabel.innerText = affilies.length;
+            
+            if (affilies.length > 0) {
+                container.innerHTML = affilies.map(a => {
+                    const gainMembre = parseFloat(a.total_depose) * (taux / 100);
+                    totalGains += gainMembre;
+
+                    return `
+                        <div class="affilie-card">
+                            <div>
+                                <div class="affilie-id">Membre #${a.id_public}</div>
+                                <div class="affilie-info">A déposé: ${a.total_depose} F</div>
+                            </div>
+                            <div class="affilie-gain">+${gainMembre.toFixed(0)} F</div>
+                        </div>`;
+                }).join('');
+            } else {
+                container.innerHTML = '<p style="text-align:center; opacity:0.5; padding:20px; font-size:12px;">Aucun affilié trouvé.</p>';
+            }
+            gainsLabel.innerText = totalGains.toFixed(0) + " F";
+        }
+
+    } catch (e) {
+        console.error("Erreur page invités:", e);
+    }
+}
+
+
+
+/**
+ * Remplit les informations réelles de l'utilisateur sur la page Profil
+ */
+function chargerProfilVisual() {
+    // On vérifie que les données utilisateur sont bien présentes dans le localStorage
+    if (!userData) {
+        console.error("Erreur : Données utilisateur introuvables");
+        return;
+    }
+
+    // Injection du nom d'utilisateur (ou "Utilisateur" s'il n'y a pas de nom)
+    const profilName = document.getElementById('profil-username');
+    if (profilName) profilName.innerText = userData.username || "Utilisateur";
+
+    // Injection du numéro de téléphone
+    const profilPhone = document.getElementById('profil-phone');
+    if (profilPhone) profilPhone.innerText = userData.telephone;
+
+    // Injection de l'ID Public (avec le # devant)
+    const profilId = document.getElementById('profil-id');
+    if (profilId) profilId.innerText = "#" + userData.id_public;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -564,16 +1046,45 @@ function copierAdresse(event) {
         target.style.display = isVisible ? 'none' : 'block';
     }
 
-    function copyLink() { 
-        navigator.clipboard.writeText(document.getElementById('invite-link').innerText); 
-        alert("Lien d'affiliation copié !"); 
-    }
+    
 
     
 
 
 
+/**
+ * Copie le lien de parrainage depuis la section Invités
+ */
+function copyLink() {
+    // 1. On récupère le texte du lien affiché dans la nouvelle section
+    const linkElement = document.getElementById('invite-link-page');
+    
+    if (!linkElement || linkElement.innerText === "---") {
+        alert("Lien non disponible pour le moment.");
+        return;
+    }
 
+    const textToCopy = linkElement.innerText;
+
+    // 2. Utilisation de l'API moderne de copie
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Petit feedback visuel (facultatif mais pro)
+        alert("✅ Lien de parrainage copié !");
+    }).catch(err => {
+        // Méthode de secours au cas où le navigateur bloque l'API
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert("✅ Lien copié !");
+        } catch (e) {
+            alert("Erreur lors de la copie");
+        }
+        document.body.removeChild(textArea);
+    });
+}
 
 
     async function rafraichir() {
@@ -811,8 +1322,8 @@ chargerTauxDynamique();
 
 
 
-    document.getElementById('user-id').innerText = userData.id_public;
-    document.getElementById('invite-link').innerText = window.location.origin + "/index.html?ref=" + userData.code_promo;
+    //document.getElementById('user-id').innerText = userData.id_public;
+    //document.getElementById('invite-link').innerText = window.location.origin + "/index.html?ref=" + userData.code_promo;
     rafraichir();
     function logout() { localStorage.clear(); window.location.href = "index.html"; }
 </script>
