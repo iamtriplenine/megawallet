@@ -3,20 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Wallet - Mon Espace</title>
+    <title>Mega Wallet - Connexion</title>
 
-
-
-
-
-    <meta name="mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mega Wallet">
-
-
-<link rel="manifest" href="manifest.json">
+    
+    <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3b82f6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -35,1365 +25,218 @@
 
 
 
-    
+
+
     <link rel="icon" type="image/png" href="https://i.postimg.cc/NGpJ6343/IMG_8321.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
-        /* === VARIABLES DE COULEURS MEGA WALLET === */
         :root { 
-            --primary: #007bff;   
-            --secondary: #6c5ce7; 
-            --success: #00b894;   
-            --warning: #e17055;   
-            --bg: #f8f9fa;        
-            --text: #2d3436;      
-            --card: white;
-            --border: #f1f1f1;
+            --bg-body: #0f172a;       
+            --bg-card: #1e293b;       
+            --primary: #3b82f6;       
+            --text-main: #f1f5f9;     
+            --text-dim: #94a3b8;      
+            --input-bg: #0f172a;      
+            --border: #334155;        
         }
 
-
-
-
-
-
-
-
-
-        /* Style de la barre de navigation en bas */
-.mobile-nav {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px; /* Aligné sur ton container */
-    height: 65px;
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 1000;
-    border-radius: 20px;
-}
-
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #636e72;
-    font-size: 11px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-
-/* --- EFFET LUMINEUX SANS BARRE --- */
-.nav-item.active {
-    color: var(--primary) !important;
-    transition: all 0.3s ease;
-}
-
-/* Lueur intense sur l'icône */
-.nav-item.active i {
-    /* Plusieurs couches d'ombres pour un effet de néon profond */
-    filter: drop-shadow(0 0 2px var(--primary)) 
-            drop-shadow(0 0 10px var(--primary)) 
-            drop-shadow(0 0 20px var(--primary));
-    transform: scale(1.1); /* L'icône grossit légèrement pour marquer la sélection */
-}
-
-/* Lueur douce sur le texte pour l'accompagner */
-.nav-item.active span {
-    text-shadow: 0 0 8px var(--primary);
-    font-weight: bold;
-}
-
-/* Animation de pulsation de la lumière */
-@keyframes neon-pulse {
-    0%, 100% { filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 10px var(--primary)); }
-    50% { filter: drop-shadow(0 0 5px var(--primary)) drop-shadow(0 0 25px var(--primary)); }
-}
-
-.nav-item.active i {
-    animation: neon-pulse 1.5s infinite ease-in-out;
-}
-
-
-
-.nav-item i {
-    font-size: 20px;
-    margin-bottom: 4px;
-}
-
-/* Espacement pour que le contenu ne soit pas caché derrière la barre */
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    padding-bottom: 80px !important;
-}
-
-/* Masquer les sections de pages par défaut */
-.page-section {
-    width: 100%;
-    max-width: 480px; /* Même largeur que ton container principal */
-    margin: 0 auto;   /* Centre la page sur l'écran */
-    padding-bottom: 100px; /* Espace pour ne pas cacher le contenu derrière la barre de navigation */
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-
-
-
-
-
-.affilie-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
-    background: var(--bg); /* Utilise la couleur de fond du thème */
-    border-radius: 12px;
-    border: 1px solid var(--border);
-}
-.affilie-id { font-weight: 600; font-size: 13px; }
-.affilie-gain { color: var(--success); font-weight: 700; font-size: 13px; }
-.affilie-info { font-size: 10px; opacity: 0.6; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* === AJOUT DU DESIGN MINAGE (DESIGN 1) === */
-        .btn-crypto {
-            background: linear-gradient(135deg, #f39c12, #f1c40f);
-            color: white !important;
-            border: none;
-            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
-            animation: pulse-gold 2s infinite;
-            margin-top: 10px;
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main);
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; 
         }
-        @keyframes pulse-gold {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 4px 25px rgba(243, 156, 18, 0.6); }
-            100% { transform: scale(1); }
+
+        .auth-card { 
+            background: var(--bg-card); 
+            padding: 35px 25px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+            width: 90%; max-width: 380px; 
+            border: 1px solid var(--border);
         }
-        #page-mining { display: none; text-align: center; padding-top: 20px; }
-        .mining-btn {
-            width: 220px; height: 220px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            border-radius: 50%;
-            border: 8px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin: 40px auto;
+
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            width: 55px; height: 55px; border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 40px; font-weight: 900; color: white;
-            cursor: pointer; position: relative;
-            user-select: none; transition: transform 0.1s;
-
-
-
-
+            margin: 0 auto 10px;
         }
-        .mining-btn:active { transform: scale(0.95); }
-        .coin-count { font-size: 48px; font-weight: 800; color: #f39c12; margin: 20px 0; }
-        .tap-effect { position: absolute; color: #f1c40f; font-weight: bold; font-size: 24px; pointer-events: none; animation: floatUp 0.8s ease-out forwards; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
-        /* === FIN DESIGN MINAGE === */
 
-
-
-
-
-
-
-
-        /* === CONFIGURATION DES THÈMES === */
-        [data-theme="dark"] { --bg: #0f172a; --text: #f1f5f9; --card: #1e293b; --border: #334155; }
-        [data-theme="rose"] { --bg: #1a0f14; --text: #ffe4e6; --card: #2d1b24; --border: #4c2d3a; --primary: #fb7185; }
-        [data-theme="violet"] { --bg: #0f0a1a; --text: #f5f3ff; --card: #1c142e; --border: #3b2d5a; --primary: #8b5cf6; }
+        h2 { text-align: center; margin-bottom: 25px; font-size: 19px; }
         
-        [data-theme="black"] { 
-            --bg: #000000; 
-            --text: #ffffff; 
-            --card: #0a0a0a; 
-            --border: #222222; 
-            --primary: #ffffff; 
-        }
-        [data-theme="black"] .info-section, 
-        [data-theme="black"] .theme-menu,
-        [data-theme="black"] #form-recharge, 
-        [data-theme="black"] #form-retrait, 
-        [data-theme="black"] #guide-site, 
-        [data-theme="black"] #historique-box {
-            border: 1px solid #333;
-        }
-        [data-theme="black"] .guide-text, 
-        [data-theme="black"] .invite-box {
-            background: #111;
-            color: #ccc;
-        }
-        [data-theme="black"] input, [data-theme="black"] select {
-            background: #000;
-            color: #fff;
-            border-color: #333;
-        }
-
-        [data-theme="gold"] { 
-            --bg: #0d0b05; --text: #fef3c7; --card: #1e1a0d; --border: #453a1d; --primary: #d4af37; --secondary: #f3cf7a;
-        }
-        [data-theme="gold"] .balance-card {
-            background: linear-gradient(135deg, #d4af37, #f3cf7a, #996515);
-            position: relative;
-            overflow: hidden;
-        }
-        [data-theme="gold"] .balance-card::after {
-            content: "";
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg);
-            animation: shine-gold 3s infinite;
-        }
-        @keyframes shine-gold {
-            0% { transform: translateX(-150%) rotate(30deg); }
-            100% { transform: translateX(150%) rotate(30deg); }
-        }
-
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; transition: 0.3s; }
-        .container { width: 100%; max-width: 480px; }
-
-        .btn-theme-toggle { background: var(--card); color: var(--primary); border: 2px solid var(--primary); }
-        .theme-menu { display: none; background: var(--card); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid var(--border); }
-        .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .theme-btn-opt { border: none; padding: 10px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-
-        .glass-notice {
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(20px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 22px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-            display: none; 
-            animation: slideIn 0.5s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .glass-notice h4 { margin: 0 0 5px 0; font-size: 12px; color: var(--primary); text-transform: uppercase; font-weight: 700; }
-        .glass-notice p { margin: 0; font-size: 15px; color: var(--text); font-weight: 600; }
-
-        .navbar-brand { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .logo-small { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); }
-        .logo-small i { background: var(--primary); color: white; padding: 8px; border-radius: 8px; font-size: 14px; }
-
-        .balance-card { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; padding: 30px; border-radius: 24px; text-align: center; 
-            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2); margin-bottom: 25px; position: relative; 
-            overflow: hidden; cursor: pointer;
-        }
-        .balance-amount { font-size: 38px; font-weight: 700; }
-
-        .info-section { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-        .invite-box { background: var(--bg); padding: 12px; border-radius: 12px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .btn-deposit { background: var(--success); color: white; }
-        .btn-withdraw { background: var(--warning); color: white; }
-        .btn-history { background: #636e72; color: white; margin-top: 10px; }
-        .btn-info { background: var(--card); color: var(--primary); border: 2px solid var(--primary); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-size: 12px; color: var(--text-dim); font-weight: 500; }
         
-        #form-recharge, #form-retrait, #guide-site, #historique-box { display: none; background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-
-        .btn-telegram { 
-            display: flex; align-items: center; justify-content: center; gap: 12px; 
-            background: #0088cc; color: white; padding: 18px; border-radius: 15px; 
-            text-decoration: none; font-weight: 700; margin-bottom: 25px;
-            animation: pulse-telegram 2s infinite; 
+        input, select { 
+            width: 100%; padding: 13px; 
+            border: 1px solid var(--border); border-radius: 12px; 
+            background-color: var(--input-bg); color: #fff;
+            font-size: 14px; box-sizing: border-box; outline: none;
         }
-        @keyframes pulse-telegram {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.7); }
-            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(0, 136, 204, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); }
+        input:focus { border-color: var(--primary); }
+
+        .btn-auth { 
+            width: 100%; padding: 14px; background: var(--primary);
+            color: white; border: none; border-radius: 12px; 
+            font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px;
         }
 
-        .guide-title { color: var(--text); font-size: 17px; font-weight: 700; margin-top: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .guide-text { font-size: 13px; color: #636e72; line-height: 1.6; margin-bottom: 20px; background: var(--bg); padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); }
-
-        table { width: 100%; font-size: 13px; border-collapse: collapse; }
-        td { padding: 10px 8px; border-bottom: 1px solid var(--border); font-weight: 500; }
-        .btn-logout { background: none; color: #fab1a0; border: none; cursor: pointer; width: 100%; text-decoration: underline; margin-top: 20px; font-weight: 600; }
+        .toggle-link { text-align: center; margin-top: 20px; font-size: 13px; color: var(--primary); cursor: pointer; }
+        #message { text-align: center; margin-top: 15px; font-size: 13px; min-height: 20px; font-weight: 500; }
         
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid var(--border); border-radius: 12px; box-sizing: border-box; background: var(--bg); color: var(--text); }
+        .login-info { font-size: 11px; color: #fbbf24; text-align: center; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="container" id="main-content">
-
-    <div class="navbar-brand">
-        <div class="logo-small">
-            <i class="fas fa-wallet"></i>
-            <span>Mega <span style="color:var(--primary)">Wallet</span></span>
-        </div>
-        <div style="font-size: 12px; color: var(--success); font-weight: 600;">
-            <i class="fas fa-check-circle"></i> En ligne
-        </div>
+<div class="auth-card">
+    <div class="logo-container">
+        <div class="logo-icon"><i class="fas fa-wallet" style="color: white; font-size: 24px;"></i></div>
+        <div style="font-weight: 700; font-size: 22px;">Mega <span style="color:var(--primary)">Wallet</span></div>
     </div>
 
-    <div class="glass-notice" id="admin-notice">
-        <h4><i class="fas fa-comment-dots"></i> Message Admin</h4>
-        <p id="admin-text"></p>
+    <h2 id="auth-title">Créer un compte</h2>
+
+    <div id="old-user-info" class="login-info">
+        <i class="fas fa-info-circle"></i> Anciens : Connectez-vous avec votre numéro habituel sans indicatif.
     </div>
+
+    <form id="authForm">
+        <div id="group-username" class="form-group">
+            <label><i class="fas fa-user"></i> Nom d'utilisateur</label>
+            <input type="text" id="username" placeholder="Ex: Jean_Pro">
+        </div>
+
+        <div class="form-group" id="group-country">
+            <label><i class="fas fa-globe"></i> Votre Pays (Nouveaux uniquement)</label>
+            <select id="country-select" onchange="updateIndicatif()">
+                <option value="" disabled selected>Choisir un pays</option>
+                <option value="+225">🇨🇮 Côte d'Ivoire (+225)</option>
+                <option value="+226">🇧🇫 Burkina Faso (+226)</option>
+                <option value="+221">🇸🇳 Sénégal (+221)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-phone-alt"></i> Numéro de téléphone</label>
+            <input type="tel" id="telephone" placeholder="Ex: 0708..." required>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div id="group-promo" class="form-group">
+            <label><i class="fas fa-gift"></i> Code Promo</label>
+            <input type="text" id="input_promo" placeholder="Optionnel">
+        </div>
+
+        <button type="submit" id="btn-text" class="btn-auth">S'inscrire</button>
+    </form>
     
-
-
-   <div class="balance-card">
-    <div onclick="toggleBalance()" style="cursor: pointer;">
-        <div style="font-weight: 300; opacity: 0.9;">Solde disponible</div>
-        <div class="balance-amount"><span id="user-balance">0</span> FCFA</div>
-    </div>
-    
-    <div onclick="copierAdresse(event)" style="margin-top: 12px; font-size: 13px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 10px; display: inline-block; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;">
-        <span style="opacity: 0.7; font-size: 11px;">ADRESSE :</span> 
-        <span id="user-wallet" style="font-family: monospace; font-weight: 600; margin-left: 5px; letter-spacing: 0.5px;">0x********</span>
-        <i class="fas fa-copy" style="margin-left: 8px; opacity: 0.6; font-size: 12px;"></i>
-    </div>
-
-    <div style="margin-top: 15px;">
-        <button onclick="ouvrirTransfert()" style="width: 100%; background: rgba(0,0,0,0.2); color: var(--text); border: 1px solid var(--primary); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px;">
-            <i class="fas fa-paper-plane" style="color: var(--primary); font-size: 12px;"></i>
-            Transférer
-        </button>
-    </div>
-
-    <i class="fas fa-shield-alt" style="position: absolute; right: -10px; bottom: -10px; opacity: 0.1; font-size: 80px;"></i>
+    <div id="message"></div>
+    <div class="toggle-link" id="toggle-auth" onclick="toggleMode()">Déjà inscrit ? Se connecter</div>
 </div>
-
-
-
-
-    <button class="btn btn-theme-toggle" onclick="toggleThemeMenu()">
-        <i class="fas fa-palette"></i> Modifier le thème 
-    </button>
-
-    <button class="btn btn-crypto" onclick="showMining()">
-        <i class="fab fa-bitcoin"></i> Miner Mega Crypto 
-    </button>
-
-    <div id="theme-menu" class="theme-menu">
-        <div class="theme-grid">
-            <button class="theme-btn-opt" style="background:#000; border:1px solid #333" onclick="checkThemeAccess('black')">
-                All Black <i class="fas fa-lock" id="lock-black"></i>
-            </button>
-            <button class="theme-btn-opt" style="background:#0f172a" onclick="setTheme('dark')">Sombre</button>
-            <button class="theme-btn-opt" style="background:#2d1b24" onclick="setTheme('rose')">Rose</button>
-            <button class="theme-btn-opt" style="background:#1c142e" onclick="setTheme('violet')">Violet</button>
-            <button class="theme-btn-opt" style="background: linear-gradient(to right, #d4af37, #f3cf7a); color: #000" onclick="checkThemeAccess('gold')">
-                Gold <i class="fas fa-lock" id="lock-gold"></i>
-            </button>
-            <button class="theme-btn-opt" style="background:#007bff; grid-column: span 1" onclick="setTheme('light')">Clair</button>
-        </div>
-    </div>
-
-    <div class="info-section" style="border: 2px dashed var(--primary); background: rgba(0, 123, 255, 0.05);">
-        <h4 style="margin-top:0; color:var(--primary); font-size: 15px;">
-            <i class="fas fa-gift"></i> Code Cadeau du jour
-        </h4>
-        <p style="font-size:11px; color:#636e72; margin-bottom: 10px;">
-            Trouvez le code secret sur notre <b>Canal Telegram</b> et recevez votre bonus !
-        </p>
-        <div style="display:flex; gap:8px;">
-            <input type="text" id="code-bonus-saisi" placeholder="Code secret ici..." style="margin:0; flex:1;">
-            <button class="btn btn-deposit" style="margin:0; width:100px; font-size:13px; height:45px;" onclick="reclamerBonus()">Valider</button>
-        </div>
-    </div>
-
-    <div class="info-section" style="background: rgba(245, 159, 0, 0.1); border: 1px solid #ffe066;">
-        <h4 style="margin-top:0; color:#f59f00; font-size: 14px;"><i class="fas fa-coins"></i> Jeu : Double ou Rien (50F)</h4>
-        <button class="btn" style="background:#f59f00; color:white; margin:0; padding:10px;" onclick="jouerPileFace()">
-            🪙 Tenter ma chance
-        </button>
-    </div>
-
-
-
-
-
-
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
-        <button class="btn btn-deposit" onclick="toggleSection('form-recharge')">📥 Dépôt</button>
-        <button class="btn btn-withdraw" onclick="toggleSection('form-retrait')">📤 Retrait</button>
-    </div>
-
-    <div id="form-recharge">
-        <h4 style="margin-top:0"><i class="fas fa-university"></i> Créditer mon compte</h4>
-        <p style="font-size: 12px; color: #636e72;">Envoyez les fonds au <b>+225 07 99 07 72 88</b> via Orange/MTN/Wave, puis entrez l'ID de transaction ci-dessous :</p>
-        <input type="number" id="depot-montant" placeholder="Montant déposé (FCFA)">
-        <input type="text" id="depot-id" placeholder="ID de la transaction (SMS)">
-        <button class="btn btn-deposit" onclick="envoyerPreuve()">Confirmer le dépôt</button>
-    </div>
-
-    <div id="form-retrait">
-        <h4 style="margin-top:0"><i class="fas fa-money-check-alt"></i> Retirer mes fonds</h4>
-        <input type="number" id="retrait-montant" placeholder="Montant (Min 100 F)">
-        <select id="retrait-methode">
-            <option value="Orange">Orange Money</option>
-            <option value="MTN">MTN MoMo</option>
-            <option value="Wave">Wave</option>
-        </select>
-        <input type="text" id="retrait-numero" placeholder="Numéro de réception">
-        <button class="btn btn-withdraw" onclick="demanderRetrait()">Demander le paiement</button>
-    </div>
-
-    <button class="btn btn-history" onclick="toggleSection('historique-box')">
-        <i class="fas fa-history"></i> Historique des activités <i class="fas fa-chevron-down" style="margin-left:10px; font-size:12px"></i>
-    </button>
-    <div id="historique-box" class="info-section" style="padding: 10px;">
-        <table>
-            <tbody id="table-historique"></tbody>
-        </table>
-    </div>
-
-    <button class="btn btn-info" onclick="toggleSection('guide-site')">
-        <i class="fas fa-question-circle"></i> Guide Mega Wallet
-    </button>
-    
-    <div id="guide-site">
-        <div style="text-align: center; margin-bottom: 10px;">
-            <h2 style="font-size: 15px; margin-bottom: 15px;">Assistance & Communauté</h2>
-            <a href="https://t.me/+yISVS_-X3hAxMzBk" target="_blank" class="btn-telegram">
-                <i class="fab fa-telegram-plane"></i> Rejoindre le Canal Telegram
-            </a>
-        </div>
-
-        <div class="guide-title"><i class="fas fa-wallet" style="color:var(--success)"></i> 1. LE SYSTÈME DE DÉPÔT</div>
-        <div class="guide-text">
-            Transférez le montant voulu sur le numéro indiqué dans la section dépôt. Copiez l'<b>ID de transaction</b> reçu par SMS et collez-le dans le formulaire. La validation est effectuée par nos agents sous 15 minutes.
-        </div>
-
-        <div class="guide-title"><i class="fas fa-hand-holding-usd" style="color:var(--warning)"></i> 2. COMMENT RETIRER ?</div>
-        <div class="guide-text">
-            Retrait possible dès <b>100 FCFA</b>. Remplissez le formulaire de retrait avec votre numéro. Les paiements sont envoyés sur votre compte Mobile Money sous 12h maximum.
-        </div>
-
-        <div class="guide-title"><i class="fas fa-share-alt" style="color:var(--primary)"></i> 3. GAGNER 40% PAR AMI</div>
-        <div class="guide-text">
-            Partagez votre lien d'invitation. Lorsqu'un ami s'inscrit et fait un dépôt, Mega Wallet vous reverse automatiquement <b>40%</b> du montant déposé sur votre solde.
-        </div>
-    </div>
-
-    <button class="btn btn-logout" onclick="logout()">Se déconnecter</button>
-</div>
-
-<div class="container" id="page-mining">
-    <div class="navbar-brand">
-        <div class="logo-small" onclick="hideMining()" style="cursor:pointer">
-            <i class="fas fa-arrow-left"></i>
-            <span>Retour</span>
-        </div>
-        <div style="font-weight: bold; color:#f39c12">MINEUR MEGA</div>
-    </div>
-    <div class="coin-count" id="mega-coins">0.00</div>
-    <p style="opacity: 0.7; font-size: 14px;">Tapotez pour miner des jetons MEGA</p>
-    <div class="mining-btn" onclick="mine(event)">MEGA</div>
-    <div class="info-section" style="margin-top: 30px;">
-        <p style="font-size: 12px; margin: 0;">100,000 MEGA = 50 FCFA</p>
-        <p style="font-size: 10px; opacity: 0.6;">(Bientôt échangeable contre FCFA)</p>
-    </div>
-</div>
-
-
-
-
-
-
-<nav class="mobile-nav">
-    <div class="nav-item active" onclick="switchPage('home', this)">
-        <i class="fas fa-wallet"></i>
-        <span>Portefeuille</span>
-    </div>
-    <div class="nav-item" onclick="switchPage('invite', this)">
-        <i class="fas fa-users"></i>
-        <span>Invités</span>
-    </div>
-    <div class="nav-item" onclick="switchPage('invest', this)">
-        <i class="fas fa-chart-line"></i>
-        <span>Invest</span>
-    </div>
-
-    <div class="nav-item" onclick="switchPage('game', this)">
-        <i class="fas fa-gamepad"></i>
-        <span>Game</span>
-    </div> 
-
-
-    <div class="nav-item" onclick="switchPage('profil', this)">
-        <i class="fas fa-user-circle"></i>
-        <span>Profil</span>
-    </div>
-</nav>
-
-
-
-
-<div id="page-invite" class="page-section" style="display:none;">
-    <div class="navbar-brand">
-        <div class="logo-small">
-            <i class="fas fa-users"></i>
-            <span>Mes <span style="color:var(--primary)">Affiliés</span></span>
-        </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
-        <div class="info-section" style="margin-bottom:0; text-align:center;">
-            <div style="font-size: 10px; opacity: 0.7; text-transform: uppercase;">Total Invités</div>
-            <div id="count-affilies" style="font-size: 22px; font-weight: 700; color: var(--primary);">0</div>
-        </div>
-        <div class="info-section" style="margin-bottom:0; text-align:center;">
-            <div style="font-size: 10px; opacity: 0.7; text-transform: uppercase;">Gains Reçus</div>
-            <div id="gains-affilies" style="font-size: 22px; font-weight: 700; color: var(--success);">0 F</div>
-        </div>
-    </div>
-
-    <div class="info-section" style="margin-bottom: 20px; border: 1px dashed var(--primary); background: rgba(0,0,0,0.1);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span style="font-size: 12px; font-weight: 600;">Code : <span id="user-promo-code" style="color:var(--primary)">----</span></span>
-            <span style="font-size: 10px; background: var(--primary); color: white; padding: 3px 8px; border-radius: 20px;">
-                Commission : <span id="taux-reel-page">40</span>%
-            </span>
-        </div>
-        
-        <div style="font-size: 11px; margin-bottom: 8px; opacity: 0.8;">Partager mon lien :</div>
-        <div style="background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <span id="invite-link-page" style="font-size: 11px; word-break: break-all; opacity: 0.7; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 80%;">---</span>
-            <i class="fas fa-copy" onclick="copyLink()" style="cursor:pointer; color:var(--primary); font-size: 16px;"></i>
-        </div>
-    </div>
-
-    <div class="info-section">
-        <h4 style="margin-top:0; font-size:13px; opacity:0.8;"><i class="fas fa-list"></i> Historique des parrainages</h4>
-        <div id="liste-affilies">
-            </div>
-    </div>
-</div>
-
-
-
-
-
-
-<div id="page-invest" class="page-section" style="display:none; padding: 15px; padding-bottom: 80px;">
-    <div class="navbar-brand" style="margin-bottom: 20px;">
-        <div class="logo-small">
-            <i class="fas fa-chart-line"></i>
-            <span>Mining <span style="color:var(--primary)">Center</span></span>
-        </div>
-<br>
-
-    </div>
-
-<br><br><br>
-<div>
- <h3 style="text-align:center">Machines d'Investissement</h3>
-    <p style="text-align:center; opacity:0.6">Bientôt disponible...</p>
-</div>
-
-</div>
-
-
-
-
-
-
-
-<div id="page-game" class="page-section" style="display:none;">
-    <div class="navbar-brand">
-        <div class="logo-small">
-            <i class="fas fa-gamepad"></i>
-            <span>Mega <span style="color:var(--primary)">Games</span></span>
-        </div>
-    </div>
-
-    <div class="info-section" style="text-align: center; padding: 50px 20px;">
-        <i class="fas fa-layer-group" style="font-size: 40px; opacity: 0.1; margin-bottom: 20px;"></i>
-        <h3 style="margin-bottom: 10px;">Espace Jeux</h3>
-        <p style="font-size: 13px; opacity: 0.6; line-height: 1.6;">
-            Cette section est actuellement Indisponible <br>
-            
-        </p>
-    </div>
-</div>
-
-
-
-
-
-
-<div id="page-profil" class="page-section" style="display:none;">
-    <div class="navbar-brand">
-        <div class="logo-small">
-            <i class="fas fa-user-circle"></i>
-            <span>Mon <span style="color:var(--primary)">Espace</span></span>
-        </div>
-    </div>
-
-    <div class="info-section" style="text-align: center; padding: 30px 20px;">
-        <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 35px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            <i class="fas fa-user"></i>
-        </div>
-        <h2 id="profil-username" style="margin: 0; font-size: 18px;">Utilisateur</h2>
-        <p id="profil-phone" style="opacity: 0.6; font-size: 13px; margin: 5px 0;">+225 00000000</p>
-    </div>
-
-    <div class="info-section">
-        <h4 style="margin-top:0; font-size:14px; opacity:0.8;"><i class="fas fa-id-card"></i> Détails du compte</h4>
-        
-        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border);">
-            <span style="font-size: 13px; opacity: 0.7;">ID Utilisateur</span>
-            <span id="profil-id" style="font-weight: 600; font-size: 13px;">#000000</span>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border);">
-            <span style="font-size: 13px; opacity: 0.7;">Statut du compte</span>
-            <span style="color: var(--success); font-weight: 600; font-size: 12px;"><i class="fas fa-check-circle"></i> Vérifié</span>
-        </div>
-        
-        <div style="display: flex; justify-content: space-between; padding: 12px 0;">
-            <span style="font-size: 13px; opacity: 0.7;">Langue</span>
-            <span style="font-size: 13px;">Français (FR)</span>
-        </div>
-    </div>
-
-    <div class="info-section">
-        <h4 style="margin-top:0; font-size:14px; opacity:0.8;"><i class="fas fa-shield-alt"></i> Sécurité & Support</h4>
-        
-        <button class="btn-primary" style="width:100%; margin-bottom: 10px; background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 13px; text-align: left; padding: 12px;">
-            <i class="fas fa-lock" style="margin-right: 10px; color: var(--primary);"></i> Modifier le mot de passe
-        </button>
-
-        <button onclick="window.open('https://t.me/MEGA_wallet_invest', '_blank')" 
-        class="btn-primary" 
-        style="width:100%; background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); font-size: 13px; text-align: left; padding: 12px; cursor: pointer; border-radius: 10px;">
-    <i class="fab fa-telegram" style="margin-right: 10px; color: #0088cc; font-size: 16px;"></i> 
-    Contacter le Support
-</button>
-    </div>
-
-    <button onclick="logout()" style="width:100%; background: #ff4757; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; margin-top: 10px; cursor: pointer; transition: 0.3s;">
-        <i class="fas fa-sign-out-alt"></i> SE DÉCONNECTER
-    </button>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <script>
-    let isBalanceHidden = false;
-    let currentLockedTheme = "";
+    let isLoginMode = false;
+    const API_URL = "https://backend-xxgf.onrender.com";
 
-    /* --- FONCTIONS MINAGE AJOUTÉES ET SYNCHRONISÉES --- */
-    let megaCoins = parseFloat(localStorage.getItem('mega_bal')) || 0;
+    if(localStorage.getItem('user')) {
+        window.location.href = "user.html";
+    }
 
-    // FONCTION POUR ENVOYER LES POINTS AU SERVEUR
-    async function synchroniserMinage() {
-        if (!userData) return;
+    function updateIndicatif() {
+        const select = document.getElementById('country-select');
+        const phoneInput = document.getElementById('telephone');
+        if(!isLoginMode) {
+            phoneInput.value = select.value;
+        }
+    }
+
+    function toggleMode() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('auth-title').innerText = isLoginMode ? "Connexion" : "Créer un compte";
+        document.getElementById('btn-text').innerText = isLoginMode ? "Se connecter" : "S'inscrire";
+        document.getElementById('toggle-auth').innerText = isLoginMode ? "Nouveau ? Créer un compte" : "Déjà inscrit ? Se connecter";
+        
+        // Cacher le choix du pays en mode connexion pour permettre la saisie libre (anciens numéros)
+        document.getElementById('group-username').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('group-promo').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('group-country').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('old-user-info').style.display = isLoginMode ? 'block' : 'none';
+        
+        document.getElementById('telephone').value = "";
+        document.getElementById('message').innerText = "";
+    }
+
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('message');
+        
+        // En mode inscription, on vérifie l'indicatif
+        if(!isLoginMode && !document.getElementById('country-select').value) {
+            msgDiv.style.color = "#f87171";
+            msgDiv.innerText = "Sélectionnez votre pays pour l'indicatif.";
+            return;
+        }
+
+        const endpoint = isLoginMode ? '/login' : '/register';
+        const data = {
+            telephone: document.getElementById('telephone').value.trim(),
+            password: document.getElementById('password').value.trim()
+        };
+
+        if (!isLoginMode) {
+            data.username = document.getElementById('username').value.trim();
+            data.promo_parrain = document.getElementById('input_promo').value.trim() || null;
+        }
+
+        msgDiv.style.color = "#3b82f6";
+        msgDiv.innerText = "Chargement...";
+
         try {
-            await fetch(`${API}/update-mining`, {
+            const response = await fetch(API_URL + endpoint, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ 
-                    id_public_user: userData.id_public, 
-                    mining_balance: megaCoins 
-                })
-            });
-            console.log("Synchro réussie : " + megaCoins);
-        } catch (e) {
-            console.error("Erreur synchro :", e);
-        }
-    }
-
-    // Synchronisation automatique toutes les 30 secondes
-    setInterval(synchroniserMinage, 30000);
-
-    function showMining() {
-        document.getElementById('main-content').style.display = 'none';
-        document.getElementById('page-mining').style.display = 'block';
-        document.getElementById('mega-coins').innerText = megaCoins.toFixed(2);
-    }
-    
-    function hideMining() {
-        synchroniserMinage(); // Synchronisation immédiate quand on quitte
-        document.getElementById('page-mining').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-    }
-    
-    function mine(e) {
-        megaCoins += 0.05;
-        document.getElementById('mega-coins').innerText = megaCoins.toFixed(2);
-        localStorage.setItem('mega_bal', megaCoins);
-        let eff = document.createElement('div');
-        eff.className = 'tap-effect';
-        eff.innerText = '+0.05';
-        eff.style.left = e.clientX + 'px';
-        eff.style.top = e.clientY + 'px';
-        document.body.appendChild(eff);
-        setTimeout(() => eff.remove(), 800);
-    }
-    /* --- FIN FONCTIONS MINAGE --- */
-
-
-
-
-
-
-/**
- * Fonction pour changer de page sans recharger
- * @param {string} pageId - L'ID de la page à afficher
- * @param {HTMLElement} element - L'élément cliqué pour activer le style
- */
-/**
- * Gère la navigation entre les différentes sections de l'application
- * @param {string} pageId - L'identifiant de la page (home, game, invest, invite, profil)
- * @param {HTMLElement} element - L'élément de menu cliqué pour le style actif
- */
-function switchPage(pageId, element) {
-    // 1. Liste complète de toutes les sections pour un masquage propre
-    const sections = [
-        'main-content', 
-        'page-game', 
-        'page-invite', 
-        'page-invest', 
-        'page-profil', 
-        'page-mining'
-    ];
-
-    // On masque chaque section si elle existe dans le document
-    sections.forEach(id => {
-        const section = document.getElementById(id);
-        if (section) section.style.display = 'none';
-    });
-
-    // 2. Affichage de la section demandée
-    if (pageId === 'home') {
-        document.getElementById('main-content').style.display = 'block';
-    } else {
-        const targetPage = document.getElementById('page-' + pageId);
-        if (targetPage) {
-            targetPage.style.display = 'block';
-        }
-    }
-
-    // 3. Gestion visuelle de la barre de navigation (état actif)
-    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-    if (element) {
-        element.classList.add('active');
-    }
-
-    // 4. Chargement dynamique des données selon la page sélectionnée
-    if (pageId === 'invite') {
-        chargerAffiliesVisual();
-    }
-    
-    if (pageId === 'profil') {
-        chargerProfilVisual();
-    }
-
-    // Note: On peut ajouter ici d'autres fonctions pour 'game' ou 'invest' plus tard
-}
-
-
-
-
-
-
-
-
-/**
- * Charge la liste des affiliés et calcule les gains
- * Se base sur le taux de commission dynamique récupéré du serveur
- */
-// Fonction pour charger et afficher les statistiques de parrainage
-async function chargerAffiliesVisual() {
-    if (!userData) return;
-
-    try {
-        // 1. Mise à jour des informations de parrainage sur la page
-        document.getElementById('user-promo-code').innerText = userData.code_promo;
-        
-        // On génère le lien propre
-        const domaine = (window.location.origin.includes('file://')) ? "https://megawallet.com" : window.location.origin;
-        document.getElementById('invite-link-page').innerText = domaine + "/index.html?ref=" + userData.code_promo;
-
-        // 2. Récupération du taux et des affiliés
-        const resTaux = await fetch(`${API}/config/taux-parrainage`);
-        const dataTaux = await resTaux.json();
-        const taux = parseFloat(dataTaux.taux || 40);
-        
-        // Affichage du taux dans le petit badge
-        document.getElementById('taux-reel-page').innerText = taux;
-
-        const res = await fetch(`${API}/user/affilies/${userData.id_public}`);
-        const affilies = await res.json();
-
-        const container = document.getElementById('liste-affilies');
-        const countLabel = document.getElementById('count-affilies');
-        const gainsLabel = document.getElementById('gains-affilies');
-
-        let totalGains = 0;
-        
-        if (Array.isArray(affilies)) {
-            countLabel.innerText = affilies.length;
-            
-            if (affilies.length > 0) {
-                container.innerHTML = affilies.map(a => {
-                    const gainMembre = parseFloat(a.total_depose) * (taux / 100);
-                    totalGains += gainMembre;
-
-                    return `
-                        <div class="affilie-card">
-                            <div>
-                                <div class="affilie-id">Membre #${a.id_public}</div>
-                                <div class="affilie-info">A déposé: ${a.total_depose} F</div>
-                            </div>
-                            <div class="affilie-gain">+${gainMembre.toFixed(0)} F</div>
-                        </div>`;
-                }).join('');
-            } else {
-                container.innerHTML = '<p style="text-align:center; opacity:0.5; padding:20px; font-size:12px;">Aucun affilié trouvé.</p>';
-            }
-            gainsLabel.innerText = totalGains.toFixed(0) + " F";
-        }
-
-    } catch (e) {
-        console.error("Erreur page invités:", e);
-    }
-}
-
-
-
-/**
- * Remplit les informations réelles de l'utilisateur sur la page Profil
- */
-function chargerProfilVisual() {
-    // On vérifie que les données utilisateur sont bien présentes dans le localStorage
-    if (!userData) {
-        console.error("Erreur : Données utilisateur introuvables");
-        return;
-    }
-
-    // Injection du nom d'utilisateur (ou "Utilisateur" s'il n'y a pas de nom)
-    const profilName = document.getElementById('profil-username');
-    if (profilName) profilName.innerText = userData.username || "Utilisateur";
-
-    // Injection du numéro de téléphone
-    const profilPhone = document.getElementById('profil-phone');
-    if (profilPhone) profilPhone.innerText = userData.telephone;
-
-    // Injection de l'ID Public (avec le # devant)
-    const profilId = document.getElementById('profil-id');
-    if (profilId) profilId.innerText = "#" + userData.id_public;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    function toggleBalance() {
-    const balanceSpan = document.getElementById('user-balance');
-    const walletSpan = document.getElementById('user-wallet'); // On cible la nouvelle zone d'adresse
-    
-    isBalanceHidden = !isBalanceHidden;
-    
-    if (isBalanceHidden) {
-        balanceSpan.innerText = "****";
-        walletSpan.innerText = "0x********"; // Masque l'adresse avec des étoiles
-    } else {
-        balanceSpan.innerText = userData.balance;
-        // Affiche l'adresse réelle stockée dans les données de l'utilisateur
-        walletSpan.innerText = userData.wallet_address || "Indisponible";
-    }
-}
-
-// Fonction ajoutée pour copier l'adresse
-function copierAdresse(event) {
-    // Empêche le clic de fermer/ouvrir le solde en même temps
-    event.stopPropagation();
-    
-    if (isBalanceHidden) {
-        alert("Affichez le solde pour copier l'adresse.");
-        return;
-    }
-
-    const adresse = userData.wallet_address;
-    if (adresse) {
-        navigator.clipboard.writeText(adresse).then(() => {
-            // Petit message de confirmation
-            alert("Adresse copiée !");
-        }).catch(err => {
-            console.error('Erreur lors de la copie : ', err);
-        });
-    }
-}
-
-
-
-
-
-    function toggleThemeMenu() {
-        const menu = document.getElementById('theme-menu');
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        updateLocks();
-    }
-
-    function updateLocks() {
-        const themes = ['black', 'gold'];
-        themes.forEach(t => {
-            if(localStorage.getItem('unlocked-' + t)) {
-                document.getElementById('lock-' + t).className = "fas fa-check-circle";
-                document.getElementById('lock-' + t).style.color = "var(--success)";
-            }
-        });
-    }
-
-    async function checkThemeAccess(theme) {
-        if(localStorage.getItem('unlocked-' + theme)) {
-            setTheme(theme);
-        } else {
-            const oldTheme = localStorage.getItem('wallet-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            alert("Aperçu gratuit de 5 secondes activé !");
-            
-            setTimeout(() => {
-                document.documentElement.setAttribute('data-theme', oldTheme);
-                if(confirm("L'aperçu est fini. Débloquer ce thème définitivement pour 100 FCFA ?")) {
-                    buyTheme(theme);
-                }
-            }, 5000);
-        }
-    }
-
-    // === FONCTION ACHAT THÈME CORRIGÉE POUR ÉVITER LE BUG DU SOLDE ===
-    async function buyTheme(theme) {
-        const prix = 100;
-        if(parseFloat(userData.balance) < prix) return alert("Solde insuffisant (100 FCFA requis)");
-        
-        if(!confirm("Confirmer l'achat du thème " + theme + " pour " + prix + " FCFA ?")) return;
-
-        // On calcule le retrait de façon stricte ici
-        const nouveauSolde = parseFloat(userData.balance) - prix;
-
-        try {
-            const res = await fetch(`${API}/admin/modifier-solde`, {
-                method: 'POST', 
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ 
-                    cle: "999", 
-                    id_public_user: userData.id_public, 
-                    nouveau_solde: nouveauSolde 
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
             });
 
-            if(res.ok) {
-                localStorage.setItem('unlocked-' + theme, 'true');
-                alert("Thème " + theme + " débloqué ! -100 FCFA");
-                setTheme(theme);
-                rafraichir(); // Pour mettre à jour l'affichage du solde immédiatement
-            } else {
-                alert("Erreur lors de la transaction sur le serveur.");
-            }
-        } catch (e) {
-            alert("Erreur réseau. Vérifiez votre connexion.");
-        }
-    }
+            const result = await response.json();
 
-    function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('wallet-theme', theme);
-        document.getElementById('theme-menu').style.display = 'none';
-    }
-    
-    const savedTheme = localStorage.getItem('wallet-theme');
-    if(savedTheme) setTheme(savedTheme);
-
-    let userData = JSON.parse(localStorage.getItem('user'));
-    const API = "https://backend-xxgf.onrender.com";
-
-    if (!userData) window.location.href = "index.html";
-
-    function toggleSection(id) {
-        const target = document.getElementById(id);
-        const isVisible = target.style.display === 'block';
-        ['form-recharge', 'form-retrait', 'guide-site', 'historique-box'].forEach(s => document.getElementById(s).style.display = 'none');
-        target.style.display = isVisible ? 'none' : 'block';
-    }
-
-    
-
-    
-
-
-
-/**
- * Copie le lien de parrainage depuis la section Invités
- */
-function copyLink() {
-    // 1. On récupère le texte du lien affiché dans la nouvelle section
-    const linkElement = document.getElementById('invite-link-page');
-    
-    if (!linkElement || linkElement.innerText === "---") {
-        alert("Lien non disponible pour le moment.");
-        return;
-    }
-
-    const textToCopy = linkElement.innerText;
-
-    // 2. Utilisation de l'API moderne de copie
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        // Petit feedback visuel (facultatif mais pro)
-        alert("✅ Lien de parrainage copié !");
-    }).catch(err => {
-        // Méthode de secours au cas où le navigateur bloque l'API
-        const textArea = document.createElement("textarea");
-        textArea.value = textToCopy;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            alert("✅ Lien copié !");
-        } catch (e) {
-            alert("Erreur lors de la copie");
-        }
-        document.body.removeChild(textArea);
-    });
-}
-
-
-    async function rafraichir() {
-    try {
-        const res = await fetch(`${API}/login`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ telephone: userData.telephone, password: userData.password })
-        });
-        const data = await res.json();
-        if(data.success) {
-            userData = data.user;
-            localStorage.setItem('user', JSON.stringify(userData));
-            
-            if(!isBalanceHidden) {
-                document.getElementById('user-balance').innerText = userData.balance;
-                document.getElementById('user-wallet').innerText = userData.wallet_address || "0x********";
-            }
-
-            const noticeBox = document.getElementById('admin-notice');
-            if(userData.message && userData.message.trim() !== "") {
-                document.getElementById('admin-text').innerText = userData.message;
-                noticeBox.style.display = 'block';
-            } else {
-                noticeBox.style.display = 'none';
-            }
-        }
-
-        // --- RÉCUPÉRATION ET AFFICHAGE DE L'HISTORIQUE ---
-        const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
-        const hdata = await hres.json();
-        
-        // --- DANS TA FONCTION rafraichir() ---
-// Remplace le bloc document.getElementById('table-historique').innerHTML = ... par ceci :
-
-// --- AFFICHAGE DE L'HISTORIQUE AVEC EMOJIS ET DESIGN PRO ---
-document.getElementById('table-historique').innerHTML = hdata.map(t => {
-    let typeLabel = 'Transaction';
-    let typeColor = '#636e72'; 
-    let emoji = '⚙️';
-    let detailMessage = t.statut;
-
-    // Détection du type avec emojis adaptés
-    if (t.statut.includes('retrait')) {
-        typeLabel = 'RETRAIT';
-        typeColor = '#e17055'; // Orange
-        emoji = '📤';
-    } 
-    else if (t.statut.includes('Transfert vers')) {
-        typeLabel = 'ENVOYÉ';
-        typeColor = '#ff7675'; // Rouge/Corail
-        emoji = '💸';
-    }
-    else if (t.statut.includes('Reçu de')) {
-        typeLabel = 'REÇU';
-        typeColor = '#00b894'; // Vert
-        emoji = '💰';
-    }
-    else if (t.statut.includes('validé') || t.statut.includes('Achat')) {
-        typeLabel = 'DÉPÔT';
-        typeColor = '#00b894'; // Vert
-        emoji = '💎';
-    }
-
-    // On nettoie un peu le message d'adresse pour qu'il ne soit pas trop long
-    let messageCourt = detailMessage.length > 25 ? detailMessage.substring(0, 22) + "..." : detailMessage;
-
-    return `
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; background: var(--card);">
-            
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 42px; height: 42px; background: ${typeColor}15; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                    ${emoji}
-                </div>
+            if (result.success) {
+                msgDiv.style.color = "#4ade80";
+                msgDiv.innerText = "Succès !";
                 
-                <div>
-                    <div style="font-weight: 700; font-size: 13px; color: ${typeColor}; display: flex; align-items: center; gap: 5px;">
-                        ${typeLabel}
-                    </div>
-                    <div style="font-size: 10px; opacity: 0.5; font-family: 'Poppins', sans-serif;">
-                        ${messageCourt}
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: right;">
-                <div style="font-weight: 800; font-size: 14px; color: var(--text);">
-                    ${typeLabel === 'ENVOYÉ' || typeLabel === 'RETRAIT' ? '-' : '+'}${t.montant} F
-                </div>
-                <div style="font-size: 9px; opacity: 0.4;">
-                    ${new Date(t.date_crea).toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}
-                </div>
-            </div>
-        </div>
-    `;
-}).join('') || '<div style="text-align:center; padding:30px; opacity:0.3;">📭 Aucune transaction</div>';
-
-    } catch(e) {
-        console.error("Erreur rafraîchissement:", e);
-    }
-}
-
-
-
-
-
-    async function reclamerBonus() {
-        const code = document.getElementById('code-bonus-saisi').value;
-        if(!code) return alert("Entrez un code !");
-        const res = await fetch(`${API}/reclamer-bonus`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ id_public_user: userData.id_public, code_saisi: code })
-        });
-        const data = await res.json();
-        alert(data.message);
-        if(res.ok) { document.getElementById('code-bonus-saisi').value = ""; rafraichir(); }
-    }
-
-    async function jouerPileFace() {
-        if(!confirm("Miser 50 FCFA sur ce lancer ?")) return;
-        const res = await fetch(`${API}/jeu/pile-face`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ id_public_user: userData.id_public, mise: 50 })
-        });
-        const data = await res.json();
-        if(res.ok) {
-            alert(data.gagne ? "🎉 GAGNÉ ! +100 FCFA ajoutés !" : "❌ PERDU... Retentez votre chance !");
-            rafraichir();
-        } else { alert(data.message); }
-    }
-
-    async function demanderRetrait() {
-        const mtInput = document.getElementById('retrait-montant').value;
-        const mt = parseFloat(mtInput);
-        if(isNaN(mt) || mt < 100) return alert("Minimum 100 FCFA");
-        await rafraichir();
-        if(parseFloat(userData.balance) < mt) return alert("Solde insuffisant !");
-        const res = await fetch(`${API}/retrait`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ 
-                id_public_user: userData.id_public, 
-                montant: mt, 
-                methode: document.getElementById('retrait-methode').value, 
-                numero: document.getElementById('retrait-numero').value 
-            })
-        });
-        if(res.ok) { alert("Demande transmise !"); await rafraichir(); toggleSection('none'); }
-    }
-
-
-
-// --- NOUVEAU : SYSTÈME DE TRANSFERT ENTRE UTILISATEURS ---
-async function ouvrirTransfert() {
-    // 1. Demander l'adresse du destinataire
-    const adresseDest = prompt("Entrez l'ADRESSE WALLET du destinataire (0x...) :");
-    if (!adresseDest || adresseDest.trim() === "") return;
-
-    // Sécurité : ne pas s'envoyer à soi-même
-    if (adresseDest === userData.wallet_address) {
-        return alert("Vous ne pouvez pas vous envoyer d'argent à vous-même.");
-    }
-
-    // 2. Demander le montant
-    const mtSaisi = prompt("Montant à transférer (FCFA) :");
-    const montant = parseFloat(mtSaisi);
-
-    if (isNaN(montant) || montant < 10) {
-        return alert("Montant invalide (Minimum 10 FCFA).");
-    }
-
-    // 3. Vérifier le solde avant d'appeler le serveur
-    if (parseFloat(userData.balance) < montant) {
-        return alert("Solde insuffisant pour ce transfert.");
-    }
-
-    // 4. Confirmation finale
-    if (!confirm(`Confirmez-vous l'envoi de ${montant} FCFA vers l'adresse ${adresseDest} ?`)) return;
-
-    try {
-        const res = await fetch(`${API}/transfert-wallet`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ 
-                id_public_expediteur: userData.id_public, 
-                adresse_destinataire: adresseDest, 
-                montant: montant 
-            })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            alert("✅ Transfert effectué avec succès !");
-            rafraichir(); // Met à jour ton solde immédiatement
-        } else {
-            alert("❌ Échec : " + (data.message || "Erreur inconnue"));
+                let sessionUser = isLoginMode ? result.user : {
+                    id_public: result.id,
+                    code_promo: result.promo,
+                    telephone: data.telephone,
+                    username: data.username,
+                    balance: 0
+                };
+                sessionUser.password = data.password; 
+                
+                localStorage.setItem('user', JSON.stringify(sessionUser));
+                setTimeout(() => { window.location.href = "user.html"; }, 800);
+            } else {
+                msgDiv.style.color = "#f87171";
+                msgDiv.innerText = result.message || "Erreur de connexion.";
+            }
+        } catch (error) {
+            msgDiv.style.color = "#f87171";
+            msgDiv.innerText = "Serveur non joignable.";
         }
-    } catch (e) {
-        alert("❌ Erreur réseau. Impossible de joindre le serveur.");
-    }
-}
+    });
 
-
-
-
-
-
-
-    async function envoyerPreuve() {
-        const res = await fetch(`${API}/depot`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ 
-                id_public_user: userData.id_public, 
-                transaction_id: document.getElementById('depot-id').value, 
-                montant: document.getElementById('depot-montant').value 
-            })
-        });
-        if(res.ok) { alert("Dépôt enregistré !"); rafraichir(); toggleSection('none'); }
-    }
-
-
-
-
-
-    // --- NOUVEAU : SYSTÈME DE POURCENTAGE DYNAMIQUE ---
-// Cette fonction demande au serveur le taux actuel pour l'afficher partout
-async function chargerTauxDynamique() {
-    try {
-        const res = await fetch(`${API}/config/taux-parrainage`);
-        const data = await res.json();
-        
-        // Mise à jour du taux dans la section "Lien d'invitation"
-        const headerTaux = document.getElementById('taux-commission-header');
-        if(headerTaux) headerTaux.innerText = data.taux;
-        
-        // Mise à jour du taux dans le titre du Guide (section 3)
-        const guideTitre = document.getElementById('taux-reel');
-        if(guideTitre) guideTitre.innerText = data.taux;
-        
-        // Mise à jour du taux dans le texte explicatif du Guide
-        const guideTexte = document.getElementById('taux-reel-text');
-        if(guideTexte) guideTexte.innerText = data.taux;
-
-    } catch(e) { 
-        console.log("Erreur de chargement du taux, utilisation du taux par défaut (40%)");
-        // En cas d'erreur, on peut forcer l'affichage à 40 par sécurité
-        if(document.getElementById('taux-commission-header')) {
-            document.getElementById('taux-commission-header').innerText = "40";
-        }
-    }
-}
-
-// --- IMPORTANT : LANCEMENT AU CHARGEMENT ---
-// On lance la fonction dès que la page s'ouvre
-chargerTauxDynamique();
-
-
-
-
-
-
-
-
-
-
-
-    //document.getElementById('user-id').innerText = userData.id_public;
-    //document.getElementById('invite-link').innerText = window.location.origin + "/index.html?ref=" + userData.code_promo;
-    rafraichir();
-    function logout() { localStorage.clear(); window.location.href = "index.html"; }
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('ref')) { document.getElementById('input_promo').value = urlParams.get('ref'); }
 </script>
 </body>
 </html>
