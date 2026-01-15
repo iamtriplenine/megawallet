@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mega Wallet - Invest</title>
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mega Wallet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3b82f6" />
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/NGpJ6343/IMG_8321.jpg" />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/NGpJ6343/IMG_8321.jpg" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    /* === Variables de base (identiques à user.html) === */
+    :root {
+      --primary: #007bff;
+      --secondary: #6c5ce7;
+      --success: #00b894;
+      --warning: #e17055;
+      --bg: #f8f9fa;
+      --text: #2d3436;
+      --card: white;
+      --border: #f1f1f1;
+    }
+
+
+
+
+
+
+
+
+
+
+    /* Progress 24h */
+.progress-wrap{
+  margin-top: 10px;
+}
+.progress-bar{
+  height: 8px;
+  width: 100%;
+  background: rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+[data-theme="dark"] .progress-bar,
+[data-theme="violet"] .progress-bar,
+[data-theme="rose"] .progress-bar,
+[data-theme="black"] .progress-bar,
+[data-theme="gold"] .progress-bar{
+  background: rgba(255,255,255,0.08);
+}
+.progress-fill{
+  height: 100%;
+  width: 0%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.countdown{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: .75;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* === Thèmes (repris de user.html) === */
+    [data-theme="dark"]   { --bg:#0f172a; --text:#f1f5f9; --card:#1e293b; --border:#334155; }
+    [data-theme="rose"]   { --bg:#1a0f14; --text:#ffe4e6; --card:#2d1b24; --border:#4c2d3a; --primary:#fb7185; }
+    [data-theme="violet"] { --bg:#0f0a1a; --text:#f5f3ff; --card:#1c142e; --border:#3b2d5a; --primary:#8b5cf6; }
+
+    [data-theme="black"] {
+      --bg:#000000; --text:#ffffff; --card:#0a0a0a; --border:#222222; --primary:#ffffff;
+    }
+    [data-theme="black"] .info-section,
+    [data-theme="black"] .header-card {
+      border: 1px solid #333;
+    }
+
+    [data-theme="gold"] {
+      --bg:#0d0b05; --text:#fef3c7; --card:#1e1a0d; --border:#453a1d;
+      --primary:#d4af37; --secondary:#f3cf7a;
+    }
+
+    body{
+      font-family:'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin:0;
+      padding:20px;
+      display:flex;
+      justify-content:center;
+      transition:0.3s;
+      padding-bottom: 90px !important; /* espace nav bas */
+    }
+    .container{ width:100%; max-width:480px; }
+
+    /* Header style proche de tes "navbar-brand/logo-small" */
+    .header-card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .logo-small{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      font-size:16px;
+    }
+    .logo-small i{
+      color: var(--primary);
+      font-size: 18px;
+    }
+    .sub{
+      font-size: 11px;
+      opacity: 0.6;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+
+    /* Cartes comme user.html */
+    .info-section{
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+    }
+
+    .mini{
+      font-size: 11px;
+      opacity: 0.65;
+    }
+    .title{
+      font-size: 14px;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .badge{
+      background: rgba(0,0,0,0.06);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid var(--border);
+      display:flex;
+      align-items:center;
+      gap: 7px;
+    }
+    [data-theme="dark"] .badge,
+    [data-theme="violet"] .badge,
+    [data-theme="rose"] .badge,
+    [data-theme="black"] .badge,
+    [data-theme="gold"] .badge{
+      background: rgba(255,255,255,0.06);
+    }
+
+    .ok{ color: var(--success); font-weight: 800; }
+    .warn{ color: var(--warning); font-weight: 800; }
+
+    /* Boutons (même esprit que .btn) */
+    .btn{
+      width:100%;
+      padding: 15px;
+      border:none;
+      border-radius: 15px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor:pointer;
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transition:0.3s;
+    }
+    .btn-primary{ background: var(--primary); color: #fff; }
+    .btn-outline{
+      background: var(--card);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    .btn-small{
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-bottom: 0;
+      width: auto;
+    }
+    .btn:disabled{ opacity: .55; cursor:not-allowed; }
+
+    /* Mise en page */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    /* Petits éléments list */
+    .machine-card{
+      background: linear-gradient(135deg, var(--card), var(--bg));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .machine-price{
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--success);
+    }
+    .muted{ opacity: .65; font-size: 11px; }
+
+    /* Nav bas (copié style user.html) */
+    .mobile-nav{
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 65px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display:flex;
+      justify-content: space-around;
+      align-items:center;
+      z-index: 1000;
+      border-radius: 20px;
+    }
+    .nav-item{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      color:#636e72;
+      font-size: 11px;
+      cursor:pointer;
+      transition: 0.3s;
+    }
+    .nav-item.active{
+      color: var(--primary) !important;
+      transition: all 0.3s ease;
+    }
+    .nav-item.active span{
+      text-shadow: 0 0 8px var(--primary);
+      font-weight: bold;
+    }
+    @keyframes neon-pulse {
+      0%, 100% { filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 10px var(--primary)); }
+      50% { filter: drop-shadow(0 0 5px var(--primary)) drop-shadow(0 0 25px var(--primary)); }
+    }
+    .nav-item.active i{
+      animation: neon-pulse 1.5s infinite ease-in-out;
+      transform: scale(1.08);
+    }
+    .nav-item i{ font-size: 20px; margin-bottom: 4px; }
+
+    /* Petites animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fadeIn { animation: fadeIn 0.25s ease; }
+
+    /* Message */
+    .message{
+      font-size: 12px;
+      opacity: .75;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container fadeIn">
+
+    <div class="header-card">
+      <div class="brand">
+        <div>
+          <div class="logo-small">
+            <i class="fas fa-microchip"></i>
+            <span>Centre d'<span style="color:var(--primary)">Investissement</span></span>
+          </div>
+          <div class="sub">
+            Achat sur <b>solde réel</b> • Gains disponibles toutes les <b>24h</b>
+          </div>
+        </div>
+
+        <button class="btn btn-outline btn-small" onclick="goBack()">
+          <i class="fas fa-arrow-left"></i> Retour
+        </button>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <div class="badge">
+          <i class="fas fa-user"></i>
+          <span id="userLabel">—</span>
+        </div>
+
+        <div class="badge">
+          <i class="fas fa-wallet" style="color:var(--primary)"></i>
+          <span>Solde: <b id="balanceLabel">—</b></span>
+        </div>
+
+        <button class="btn btn-primary btn-small" onclick="refreshAll()">
+          <i class="fas fa-rotate"></i> Actualiser
+        </button>
+      </div>
+
+      <div id="msg" class="message"></div>
+    </div>
+
+    <div class="grid">
+
+      <!-- MACHINES -->
+      <div class="info-section">
+        <div class="row">
+          <div>
+            <p class="title" style="margin-bottom:6px;">Machines disponibles</p>
+            <div class="muted">Choisis une machine → tu reçois un gain chaque 24h, pendant la durée.</div>
+          </div>
+        </div>
+        <div id="machinesBox" style="margin-top:14px;">
+          <div class="muted" style="text-align:center;padding:15px;">Chargement des machines...</div>
+        </div>
+      </div>
+
+      <!-- MES INVESTS -->
+      <div class="info-section">
+        <div class="row">
+          <div>
+            <p class="title" style="margin-bottom:6px;">Mes machines</p>
+            <div class="muted">Clique sur “Réclamer” quand des cycles (24h) sont disponibles.</div>
+          </div>
+        </div>
+        <div id="myInvestBox" style="margin-top:14px;">
+          <div class="muted" style="text-align:center;padding:15px;">Chargement de tes machines...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Nav bas (Invest actif) -->
+  <div class="mobile-nav">
+    <div class="nav-item" onclick="window.location.href='user.html'">
+      <i class="fas fa-wallet"></i>
+      <span>Portefeuille</span>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='user.html'">
+      <i class="fas fa-gamepad"></i>
+      <span>Jeux</span>
+    </div>
+
+    <div class="nav-item active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+      <i class="fas fa-chart-line"></i>
+      <span>Invest</span>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='user.html'">
+      <i class="fas fa-user-friends"></i>
+      <span>Inviter</span>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='user.html'">
+      <i class="fas fa-user"></i>
+      <span>Profil</span>
+    </div>
+  </div>
+
+<script>
+  // === EXACTEMENT comme user.html ===
+  const API = "https://backend-xxgf.onrender.com"; // identique à user.html
+  let userData = JSON.parse(localStorage.getItem('user'));
+  if (!userData) window.location.href = "index.html";
+
+  // Thème sauvegardé (identique)
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('wallet-theme', theme);
+  }
+  const savedTheme = localStorage.getItem('wallet-theme');
+  if (savedTheme) setTheme(savedTheme);
+
+  function money(n){
+    const v = Number(n || 0);
+    return v.toLocaleString('fr-FR') + " F";
+  }
+
+  function setMsg(t, kind=""){
+    const el = document.getElementById('msg');
+    el.style.opacity = t ? "0.9" : "0.0";
+    el.innerHTML = t
+      ? (kind === "ok" ? `<span class="ok">✅ ${t}</span>` :
+         kind === "warn" ? `<span class="warn">⚠️ ${t}</span>` :
+         `<span class="muted">${t}</span>`)
+      : "";
+  }
+
+  function goBack(){
+    window.location.href = "user.html";
+  }
+
+  // ✅ on fait comme user.html: rafraîchir via /login pour synchroniser le solde localStorage
+  async function rafraichirUser(){
+    try{
+      const res = await fetch(`${API}/login`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ telephone: userData.telephone, password: userData.password })
+      });
+      const data = await res.json();
+      if(data && data.success){
+        userData = data.user;
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+    }catch(e){
+      console.log("Invest rafraichirUser error:", e);
+    }
+  }
+
+  async function loadMachines(){
+    const box = document.getElementById('machinesBox');
+    box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;">Chargement...</div>`;
+
+    try{
+      const r = await fetch(`${API}/invest/machines`);
+      const j = await r.json();
+
+      if(!j || !j.success){
+        box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;color:var(--warning);">Impossible de charger les machines.</div>`;
+        return;
+      }
+
+      if(!j.machines || j.machines.length === 0){
+        box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;">Aucune machine disponible.</div>`;
+        return;
+      }
+
+      box.innerHTML = "";
+      j.machines.forEach(m => {
+        const div = document.createElement('div');
+        div.className = "machine-card";
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+            <div>
+              <div style="font-weight:800; font-size:14px; margin-bottom:5px;">
+                <i class="fas fa-microchip" style="color:var(--primary)"></i>
+                ${m.nom}
+              </div>
+              <div class="muted">
+                <i class="fas fa-coins" style="color:var(--success)"></i>
+                Gain: <b class="ok">+${money(m.gain_jour)}</b> / jour
+              </div>
+              <div class="muted" style="margin-top:3px;">
+                <i class="fas fa-clock"></i>
+                Durée: <b>${m.duree_jours} jours</b> • Total: <b>${money(m.total_retour)}</b>
+              </div>
+            </div>
+
+            <div style="text-align:right;">
+              <div class="machine-price">${money(m.prix)}</div>
+              <div class="muted" style="margin-top:4px;">Prix</div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="margin-top:14px; height:44px; font-size:13px;"
+            onclick="acheter(${m.id})">
+            <i class="fas fa-bolt"></i> Activer la machine
+          </button>
+        `;
+        box.appendChild(div);
+      });
+
+    }catch(e){
+      console.log("Invest loadMachines error:", e);
+      box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;color:var(--warning);">Erreur réseau.</div>`;
+    }
+  }
+
+  async function loadMyInvest(){
+    const box = document.getElementById('myInvestBox');
+    box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;">Chargement...</div>`;
+
+    try{
+      const r = await fetch(`${API}/invest/mes-investissements/${userData.id_public}`);
+      const j = await r.json();
+
+      if(!j || !j.success){
+        box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;color:var(--warning);">Impossible de charger tes machines.</div>`;
+        return;
+      }
+
+      const list = j.investments || [];
+      if(list.length === 0){
+        box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;">Tu n'as aucune machine active.</div>`;
+        return;
+      }
+
+      box.innerHTML = "";
+      list.forEach(inv => {
+        const claimable = Number(inv.cycles_reclamables || 0);
+        const restants = Number(inv.cycles_restants || 0);
+        const fini = (inv.statut || "").toLowerCase().includes("termin");
+
+        const div = document.createElement('div');
+        div.className = "machine-card";
+        div.style.borderLeft = `4px solid ${fini ? 'var(--warning)' : 'var(--success)'}`;
+
+        div.innerHTML = `
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+    <div>
+      <div style="font-size:12px; font-weight:900; color:${fini ? 'var(--warning)' : 'var(--success)'};">
+        ${fini ? 'TERMINÉ' : 'ACTIF'}
+      </div>
+      <div style="font-weight:800; font-size:13px; margin-top:2px;">
+        ${inv.nom}
+      </div>
+      <div class="muted" style="margin-top:6px;">
+        Cycles: <b>${inv.cycles_payes}/${inv.duree_jours}</b>
+        • Restants: <b>${restants}</b>
+      </div>
+      <div class="muted" style="margin-top:3px;">
+        Réclamables: <b class="${claimable > 0 ? 'ok' : 'warn'}">${claimable}</b>
+        • Gain/jour: <b>${money(inv.gain_jour)}</b>
+      </div>
+
+      <!-- ✅ Timer 24h -->
+      <div class="progress-wrap" data-last-claim="${inv.last_claim_at}" data-claimable="${claimable}" data-fini="${fini ? '1' : '0'}">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="countdown">
+          <span class="next-label">Prochain gain : —</span>
+          <span class="next-mini">Cycle 24h</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:right; min-width: 120px;">
+      <button class="btn btn-outline btn-small" onclick="details(${inv.id}, ${claimable})">
+        <i class="fas fa-circle-info"></i>
+      </button>
+
+      <button class="btn btn-primary btn-small"
+        style="margin-left:6px;"
+        ${claimable <= 0 ? "disabled" : ""}
+        onclick="reclamer(${inv.id})">
+        <i class="fas fa-hand-holding-dollar"></i>
+      </button>
+    </div>
+  </div>
+`;
+
+        box.appendChild(div);
+      });
+
+    }catch(e){
+      console.log("Invest loadMyInvest error:", e);
+      box.innerHTML = `<div class="muted" style="text-align:center;padding:12px;color:var(--warning);">Erreur réseau.</div>`;
+    }
+  }
+
+  function details(id, claimable){
+    alert(
+      "Machine #" + id +
+      "\n\n⏱️ Les gains se débloquent toutes les 24h." +
+      "\n💰 Cycles réclamables maintenant : " + claimable +
+      "\n\n➡️ Clique sur 💸 pour réclamer."
+    );
+  }
+
+  async function acheter(machineId){
+    if(!confirm("Confirmer l'achat de cette machine ? (déduit du solde réel)")) return;
+
+    try{
+      setMsg("Achat en cours...", "");
+      const r = await fetch(`${API}/invest/acheter`, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ id_public_user: userData.id_public, machine_id: machineId })
+      });
+      const j = await r.json();
+
+      if(!j || !j.success){
+        setMsg(j && j.message ? j.message : "Achat impossible.", "warn");
+        return;
+      }
+
+      setMsg(j.message || "Machine achetée !", "ok");
+
+      // refresh user (comme user.html) + reload lists
+      await rafraichirUser();
+      await refreshAll(false);
+
+    }catch(e){
+      console.log("Invest acheter error:", e);
+      setMsg("Erreur réseau. Impossible de joindre le serveur.", "warn");
+    }
+  }
+
+  async function reclamer(investmentId){
+    try{
+      setMsg("Réclamation...", "");
+      const r = await fetch(`${API}/invest/reclamer`, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ id_public_user: userData.id_public, investment_id: investmentId })
+      });
+      const j = await r.json();
+
+      if(!j || !j.success){
+        setMsg(j && j.message ? j.message : "Rien à réclamer.", "warn");
+        return;
+      }
+
+      setMsg(j.message || "Gains ajoutés !", "ok");
+
+      await rafraichirUser();
+      await refreshAll(false);
+
+    }catch(e){
+      console.log("Invest reclamer error:", e);
+      setMsg("Erreur réseau. Impossible de joindre le serveur.", "warn");
+    }
+  }
+
+  async function refreshAll(showToast=true){
+    // header labels
+    document.getElementById('userLabel').innerText = (userData.username || userData.telephone || "Utilisateur");
+    document.getElementById('balanceLabel').innerText = money(userData.balance);
+
+    await loadMachines();
+    await loadMyInvest();
+    updateAllCountdowns();
+
+
+    if(showToast) setMsg("Données actualisées.", "ok");
+    setTimeout(()=> setMsg(""), 2200);
+  }
+
+
+
+  const MS_24H = 24 * 60 * 60 * 1000;
+
+function formatCountdown(ms) {
+  if (ms <= 0) return "Disponible ✅";
+  const totalMin = Math.floor(ms / 60000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return `${h}h ${m}m`;
+}
+
+function updateAllCountdowns(){
+  const wraps = document.querySelectorAll('.progress-wrap');
+  const now = Date.now();
+
+  wraps.forEach(w => {
+    const lastClaim = w.getAttribute('data-last-claim');
+    const claimable = Number(w.getAttribute('data-claimable') || 0);
+    const fini = w.getAttribute('data-fini') === '1';
+
+    const fill = w.querySelector('.progress-fill');
+    const label = w.querySelector('.next-label');
+
+    if (!lastClaim || fini) {
+      fill.style.width = "100%";
+      label.innerHTML = fini ? "Terminée ✅" : "—";
+      return;
+    }
+
+    // Si déjà réclamable => on affiche "Disponible"
+    if (claimable > 0) {
+      fill.style.width = "100%";
+      label.innerHTML = `<span class="ok">Disponible ✅</span>`;
+      return;
+    }
+
+    // Sinon, calcul du temps restant avant 24h
+    const last = new Date(lastClaim).getTime();
+    const elapsed = now - last;
+
+    const remaining = MS_24H - (elapsed % MS_24H);
+    const pct = Math.max(0, Math.min(100, (elapsed / MS_24H) * 100));
+
+    fill.style.width = pct.toFixed(1) + "%";
+    label.innerHTML = `Prochain gain : <b>${formatCountdown(remaining)}</b>`;
+  });
+}
+
+
+  refreshAll(false);
+  setInterval(updateAllCountdowns, 30000);
+
+</script>
+</body>
+</html>
