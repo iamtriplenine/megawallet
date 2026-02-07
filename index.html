@@ -153,99 +153,43 @@
     <div class="toggle-link" id="toggle-auth" onclick="toggleMode()">Déjà inscrit ? Se connecter</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-    let isLoginMode = false;
-    const API_URL = "https://backend-xxgf.onrender.com";
+    // --- CONFIGURATION ---
+    const SUPABASE_URL = "TA_PROJECT_URL_ICI"; 
+    const SUPABASE_KEY = "TA_ANON_KEY_ICI";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    if(localStorage.getItem('user')) {
-        window.location.href = "user.html";
+    // Fonction pour générer l'adresse portefeuille (0x...)
+    function genererWallet() {
+        return '0x' + Math.random().toString(16).slice(2, 10).toUpperCase();
     }
 
-    function updateIndicatif() {
-        const select = document.getElementById('country-select');
-        const phoneInput = document.getElementById('telephone');
-        if(!isLoginMode) {
-            phoneInput.value = select.value;
-        }
+    // Fonction d'inscription directe sur Supabase
+    async function sInscrire(tel, pass, user, ref) {
+        const idPub = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const promo = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const wallet = genererWallet(); // Création auto de l'adresse
+
+        const { data, error } = await supabase
+            .from('utilisateurs')
+            .insert([{
+                id_public: idPub,
+                telephone: tel,
+                password: pass,
+                username: user,
+                code_promo: promo,
+                parrain_code: ref,
+                wallet_address: wallet,
+                balance: 0
+            }]);
+
+        if (error) alert("Erreur : " + error.message);
+        else alert("Compte créé ! Votre Wallet : " + wallet);
     }
-
-    function toggleMode() {
-        isLoginMode = !isLoginMode;
-        document.getElementById('auth-title').innerText = isLoginMode ? "Connexion" : "Créer un compte";
-        document.getElementById('btn-text').innerText = isLoginMode ? "Se connecter" : "S'inscrire";
-        document.getElementById('toggle-auth').innerText = isLoginMode ? "Nouveau ? Créer un compte" : "Déjà inscrit ? Se connecter";
-        
-        // Cacher le choix du pays en mode connexion pour permettre la saisie libre (anciens numéros)
-        document.getElementById('group-username').style.display = isLoginMode ? 'none' : 'block';
-        document.getElementById('group-promo').style.display = isLoginMode ? 'none' : 'block';
-        document.getElementById('group-country').style.display = isLoginMode ? 'none' : 'block';
-        document.getElementById('old-user-info').style.display = isLoginMode ? 'block' : 'none';
-        
-        document.getElementById('telephone').value = "";
-        document.getElementById('message').innerText = "";
-    }
-
-    document.getElementById('authForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const msgDiv = document.getElementById('message');
-        
-        // En mode inscription, on vérifie l'indicatif
-        if(!isLoginMode && !document.getElementById('country-select').value) {
-            msgDiv.style.color = "#f87171";
-            msgDiv.innerText = "Sélectionnez votre pays pour l'indicatif.";
-            return;
-        }
-
-        const endpoint = isLoginMode ? '/login' : '/register';
-        const data = {
-            telephone: document.getElementById('telephone').value.trim(),
-            password: document.getElementById('password').value.trim()
-        };
-
-        if (!isLoginMode) {
-            data.username = document.getElementById('username').value.trim();
-            data.promo_parrain = document.getElementById('input_promo').value.trim() || null;
-        }
-
-        msgDiv.style.color = "#3b82f6";
-        msgDiv.innerText = "Chargement...";
-
-        try {
-            const response = await fetch(API_URL + endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                msgDiv.style.color = "#4ade80";
-                msgDiv.innerText = "Succès !";
-                
-                let sessionUser = isLoginMode ? result.user : {
-                    id_public: result.id,
-                    code_promo: result.promo,
-                    telephone: data.telephone,
-                    username: data.username,
-                    balance: 0
-                };
-                sessionUser.password = data.password; 
-                
-                localStorage.setItem('user', JSON.stringify(sessionUser));
-                setTimeout(() => { window.location.href = "user.html"; }, 800);
-            } else {
-                msgDiv.style.color = "#f87171";
-                msgDiv.innerText = result.message || "Erreur de connexion.";
-            }
-        } catch (error) {
-            msgDiv.style.color = "#f87171";
-            msgDiv.innerText = "Serveur non joignable.";
-        }
-    });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('ref')) { document.getElementById('input_promo').value = urlParams.get('ref'); }
+    
+    // Note : Pense à mettre à jour tes boutons pour appeler sInscrire()
 </script>
 </body>
 </html>
