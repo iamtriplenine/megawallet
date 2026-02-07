@@ -155,41 +155,109 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-    // --- CONFIGURATION ---
+    // --- CONFIGURATION SUPABASE ---
     const SUPABASE_URL = "https://hbvomziwlcdgutocucwg.supabase.co"; 
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhidm9teml3bGNkZ3V0b2N1Y3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkxNjg2NjcsImV4cCI6MjA4NDc0NDY2N30.LgG6wbVzMvFtuvzVpxm6CuUCuVQEstX9MhB1azoWWrU";
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Fonction pour générer l'adresse portefeuille (0x...)
+    let isLoginMode = false; // Mode par défaut : Inscription
+
+    // --- OUTILS ---
     function genererWallet() {
         return '0x' + Math.random().toString(16).slice(2, 10).toUpperCase();
     }
 
-    // Fonction d'inscription directe sur Supabase
-    async function sInscrire(tel, pass, user, ref) {
-        const idPub = Math.random().toString(36).substring(2, 8).toUpperCase();
-        const promo = Math.random().toString(36).substring(2, 6).toUpperCase();
-        const wallet = genererWallet(); // Création auto de l'adresse
-
-        const { data, error } = await supabase
-            .from('utilisateurs')
-            .insert([{
-                id_public: idPub,
-                telephone: tel,
-                password: pass,
-                username: user,
-                code_promo: promo,
-                parrain_code: ref,
-                wallet_address: wallet,
-                balance: 0
-            }]);
-
-        if (error) alert("Erreur : " + error.message);
-        else alert("Compte créé ! Votre Wallet : " + wallet);
+    function toggleMode() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('auth-title').innerText = isLoginMode ? "Connexion" : "Créer un compte";
+        document.getElementById('btn-text').innerText = isLoginMode ? "Se connecter" : "S'inscrire";
+        document.getElementById('toggle-auth').innerText = isLoginMode ? "Pas de compte ? S'inscrire" : "Déjà inscrit ? Se connecter";
+        
+        // Cacher les champs inutiles en mode connexion
+        document.getElementById('group-username').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('group-country').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('group-promo').style.display = isLoginMode ? 'none' : 'block';
+        document.getElementById('old-user-info').style.display = isLoginMode ? 'block' : 'none';
     }
-    
-    // Note : Pense à mettre à jour tes boutons pour appeler sInscrire()
+
+    // --- ACTION DU FORMULAIRE ---
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById('message');
+        msg.innerText = "Chargement...";
+
+        const tel = document.getElementById('telephone').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        const user = document.getElementById('username').value.trim();
+        const ref = document.getElementById('input_promo').value.trim();
+
+        if (isLoginMode) {
+            // --- LOGIQUE DE CONNEXION ---
+            const { data, error } = await supabase
+                .from('utilisateurs')
+                .select('*')
+                .eq('telephone', tel)
+                .eq('password', pass)
+                .single();
+
+            if (error || !data) {
+                msg.style.color = "#f87171";
+                msg.innerText = "Identifiants incorrects";
+            } else {
+                // Règle importante : Si l'ancien utilisateur n'a pas d'adresse, on lui en crée une
+                if (!data.wallet_address) {
+                    const newWallet = genererWallet();
+                    await supabase.from('utilisateurs').update({ wallet_address: newWallet }).eq('id', data.id);
+                    data.wallet_address = newWallet;
+                }
+                
+                localStorage.setItem('user', JSON.stringify(data));
+                msg.style.color = "#4ade80";
+                msg.innerText = "Connexion réussie !";
+                setTimeout(() => window.location.href = "user.html", 1000);
+            }
+        } else {
+            // --- LOGIQUE D'INSCRIPTION ---
+            const idPub = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const promo = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const wallet = genererWallet();
+
+            const { data, error } = await supabase
+                .from('utilisateurs')
+                .insert([{
+                    id_public: idPub,
+                    telephone: tel,
+                    password: pass,
+                    username: user,
+                    code_promo: promo,
+                    parrain_code: ref,
+                    wallet_address: wallet,
+                    balance: 0,
+                    mining_balance: 0
+                }])
+                .select()
+                .single();
+
+            if (error) {
+                msg.style.color = "#f87171";
+                msg.innerText = "Erreur: " + error.message;
+            } else {
+                localStorage.setItem('user', JSON.stringify(data));
+                msg.style.color = "#4ade80";
+                msg.innerText = "Compte créé ! Wallet : " + wallet;
+                setTimeout(() => window.location.href = "user.html", 1500);
+            }
+        }
+    });
+
+    // Gestion du lien de parrainage automatique dans l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('ref')) { 
+        document.getElementById('input_promo').value = urlParams.get('ref'); 
+    }
 </script>
 </body>
 </html>
