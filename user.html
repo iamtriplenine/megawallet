@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mega Wallet - Mon Espace</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 
 
@@ -42,7 +42,6 @@
     
     <style>
         /* === VARIABLES DE COULEURS MEGA WALLET === */
-
         :root { 
             --primary: #007bff;   
             --secondary: #6c5ce7; 
@@ -549,14 +548,10 @@ body {
         <i class="fas fa-users"></i>
         <span>Invités</span>
     </div>
-
-    
-    <div class="nav-item" onclick="window.location.href='invest.html'">
-    <i class="fas fa-chart-line"></i>
-    <span>Invest</span>
-</div>
-
-
+    <div class="nav-item" onclick="switchPage('invest', this)">
+        <i class="fas fa-chart-line"></i>
+        <span>Invest</span>
+    </div>
 
     <div class="nav-item" onclick="switchPage('game', this)">
         <i class="fas fa-gamepad"></i>
@@ -633,39 +628,6 @@ body {
 <div>
  <h3 style="text-align:center">Machines d'Investissement</h3>
     <p style="text-align:center; opacity:0.6">Bientôt disponible...</p>
-</div>
-
-
-<div class="navbar-brand">
-    <div class="logo-small">
-        <i class="fas fa-microchip"></i>
-        <span>Centre d'<span style="color:var(--primary)">Investissement</span></span>
-    </div>
-</div>
-
-<div class="info-section" style="background: linear-gradient(135deg, var(--card), var(--bg)); border: 1px solid var(--primary); margin-top: 20px;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h4 style="margin:0; color:var(--primary)">Machine de Test (V1)</h4>
-            <p style="font-size: 11px; opacity: 0.8; margin-top: 5px;">
-                <i class="fas fa-arrow-up" style="color: var(--success);"></i> Gain : 5 FCFA / jour<br>
-                <i class="fas fa-clock"></i> Durée : 30 jours (Total 150F)
-            </p>
-        </div>
-        <div style="text-align: right;">
-            <span style="font-weight: 700; color: var(--success); font-size: 18px;">50 FCFA</span>
-        </div>
-    </div>
-    <button class="btn btn-deposit" onclick="acheterMachineTest()" style="margin-top: 15px; font-size: 13px; height: 40px; background: var(--primary);">
-        Activer la machine
-    </button>
-</div>
-
-<div id="mes-investissements" style="margin-top: 20px;">
-    <h5 style="font-size: 14px; opacity: 0.7; margin-bottom: 10px;">Mes machines actives</h5>
-    <div id="liste-invest">
-        <p style="font-size: 12px; opacity: 0.5; text-align: center;">Chargement de vos machines...</p>
-    </div>
 </div>
 
 </div>
@@ -892,10 +854,6 @@ function switchPage(pageId, element) {
  * Se base sur le taux de commission dynamique récupéré du serveur
  */
 // Fonction pour charger et afficher les statistiques de parrainage
-/**
- * Charge la liste des affiliés et calcule les gains
- * Se base sur Supabase pour récupérer les membres parrainés
- */
 async function chargerAffiliesVisual() {
     if (!userData) return;
 
@@ -907,18 +865,16 @@ async function chargerAffiliesVisual() {
         const domaine = (window.location.origin.includes('file://')) ? "https://megawallet.com" : window.location.origin;
         document.getElementById('invite-link-page').innerText = domaine + "/index.html?ref=" + userData.code_promo;
 
-        // 2. Récupération du taux depuis une table de config (ou 40 par défaut)
-        // Note: On peut créer une table 'config_globale' sur Supabase plus tard
-        const taux = 40; 
+        // 2. Récupération du taux et des affiliés
+        const resTaux = await fetch(`${API}/config/taux-parrainage`);
+        const dataTaux = await resTaux.json();
+        const taux = parseFloat(dataTaux.taux || 40);
+        
+        // Affichage du taux dans le petit badge
         document.getElementById('taux-reel-page').innerText = taux;
 
-        // 3. Récupération des affiliés (ceux qui ont ton code_promo comme parrain)
-        const { data: affilies, error } = await supabase
-            .from('utilisateurs')
-            .select('id_public, balance') // On peut simuler le gain sur la balance ou une colonne total_depose
-            .eq('parrain_code', userData.code_promo);
-
-        if (error) throw error;
+        const res = await fetch(`${API}/user/affilies/${userData.id_public}`);
+        const affilies = await res.json();
 
         const container = document.getElementById('liste-affilies');
         const countLabel = document.getElementById('count-affilies');
@@ -931,17 +887,16 @@ async function chargerAffiliesVisual() {
             
             if (affilies.length > 0) {
                 container.innerHTML = affilies.map(a => {
-                    // Calcul fictif basé sur l'activité ou une colonne spécifique
-                    // Ici on garde ta logique visuelle
-                    const gainMembre = 0; // Tu pourras lier ça aux transactions validées plus tard
+                    const gainMembre = parseFloat(a.total_depose) * (taux / 100);
+                    totalGains += gainMembre;
 
                     return `
                         <div class="affilie-card">
                             <div>
                                 <div class="affilie-id">Membre #${a.id_public}</div>
-                                <div class="affilie-info">Actif sur le réseau</div>
+                                <div class="affilie-info">A déposé: ${a.total_depose} F</div>
                             </div>
-                            <div class="affilie-gain">+${gainMembre} F</div>
+                            <div class="affilie-gain">+${gainMembre.toFixed(0)} F</div>
                         </div>`;
                 }).join('');
             } else {
@@ -951,17 +906,23 @@ async function chargerAffiliesVisual() {
         }
 
     } catch (e) {
-        console.error("Erreur page invités Supabase:", e);
+        console.error("Erreur page invités:", e);
     }
 }
+
+
 
 /**
  * Remplit les informations réelles de l'utilisateur sur la page Profil
  */
 function chargerProfilVisual() {
-    if (!userData) return;
+    // On vérifie que les données utilisateur sont bien présentes dans le localStorage
+    if (!userData) {
+        console.error("Erreur : Données utilisateur introuvables");
+        return;
+    }
 
-    // Injection du nom d'utilisateur
+    // Injection du nom d'utilisateur (ou "Utilisateur" s'il n'y a pas de nom)
     const profilName = document.getElementById('profil-username');
     if (profilName) profilName.innerText = userData.username || "Utilisateur";
 
@@ -969,7 +930,7 @@ function chargerProfilVisual() {
     const profilPhone = document.getElementById('profil-phone');
     if (profilPhone) profilPhone.innerText = userData.telephone;
 
-    // Injection de l'ID Public
+    // Injection de l'ID Public (avec le # devant)
     const profilId = document.getElementById('profil-id');
     if (profilId) profilId.innerText = "#" + userData.id_public;
 }
@@ -980,122 +941,16 @@ function chargerProfilVisual() {
 
 
 
-/**
- * ACHETER UNE MACHINE (Version Supabase)
- * Déduit le solde et crée l'investissement
- */
-async function acheterMachineTest() {
-    const PRIX_MACHINE = 50;
 
-    if(!confirm(`Voulez-vous activer cette machine de test pour ${PRIX_MACHINE} FCFA ?`)) return;
 
-    try {
-        // 1. Vérifier le solde actuel de l'utilisateur sur le serveur (sécurité)
-        const { data: user, error: userError } = await supabase
-            .from('utilisateurs')
-            .select('balance')
-            .eq('id_public', userData.id_public)
-            .single();
 
-        if (userError || !user) throw new Error("Impossible de vérifier votre solde.");
 
-        if (user.balance < PRIX_MACHINE) {
-            return alert("❌ Solde insuffisant (50 FCFA requis)");
-        }
 
-        // 2. Déduire le montant du solde
-        const nouveauSolde = user.balance - PRIX_MACHINE;
-        const { error: updateError } = await supabase
-            .from('utilisateurs')
-            .update({ balance: nouveauSolde })
-            .eq('id_public', userData.id_public);
 
-        if (updateError) throw updateError;
 
-        // 3. Enregistrer la machine dans la table 'investissements'
-        // On définit une date d'expiration (ex: +30 jours)
-        const dateExpiration = new Date();
-        dateExpiration.setDate(dateExpiration.getDate() + 30);
 
-        const { error: investError } = await supabase
-            .from('investissements')
-            .insert([{
-                id_public_user: userData.id_public,
-                nom_machine: "Machine de Test (V1)",
-                date_expiration: dateExpiration.toISOString(),
-                statut: 'actif'
-            }]);
 
-        if (investError) throw investError;
 
-        alert("✅ Succès : Machine activée !");
-        
-        // Mise à jour locale et rafraîchissement
-        userData.balance = nouveauSolde;
-        localStorage.setItem('user', JSON.stringify(userData));
-        location.reload(); 
-
-    } catch (error) {
-        console.error("Erreur achat:", error);
-        alert("Erreur lors de l'achat : " + error.message);
-    }
-}
-
-/**
- * CHARGER LES MACHINES ACTIVES (Version Supabase)
- */
-async function chargerMesInvestissements() {
-    const listeDiv = document.getElementById('liste-invest');
-    if (!listeDiv) return;
-
-    try {
-        // On récupère les machines de l'utilisateur
-        const { data: invests, error } = await supabase
-            .from('investissements')
-            .select('*')
-            .eq('id_public_user', userData.id_public)
-            .eq('statut', 'actif');
-
-        if (error) throw error;
-
-        if (!invests || invests.length === 0) {
-            listeDiv.innerHTML = `<p style="font-size: 12px; opacity: 0.5; text-align: center; margin-top:10px;">Vous n'avez aucune machine active.</p>`;
-            return;
-        }
-
-        listeDiv.innerHTML = ''; 
-        invests.forEach(inv => {
-            // Calcul des jours restants
-            const fin = new Date(inv.date_expiration);
-            const aujourdhui = new Date();
-            const diffTime = fin - aujourdhui;
-            const joursRestants = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            const card = document.createElement('div');
-            card.className = 'info-section';
-            card.style.padding = '10px';
-            card.style.marginTop = '10px';
-            card.style.borderLeft = '4px solid var(--success)';
-            
-            card.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span style="font-size: 12px; font-weight: bold; color: var(--success);">ACTIF</span>
-                        <h5 style="margin:0; font-size: 13px;">${inv.nom_machine}</h5>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 11px; opacity: 0.7;">Reste</span><br>
-                        <span style="font-weight: bold;">${joursRestants > 0 ? joursRestants : 0} jours</span>
-                    </div>
-                </div>
-            `;
-            listeDiv.appendChild(card);
-        });
-    } catch (error) {
-        console.error("Erreur chargement invest:", error);
-        listeDiv.innerHTML = `<p style="color:red; font-size:10px;">Erreur de chargement</p>`;
-    }
-}
 
 
 
@@ -1216,17 +1071,21 @@ function copierAdresse(event) {
         document.getElementById('theme-menu').style.display = 'none';
     }
     
-   const savedTheme = localStorage.getItem('wallet-theme');
+    const savedTheme = localStorage.getItem('wallet-theme');
     if(savedTheme) setTheme(savedTheme);
 
     let userData = JSON.parse(localStorage.getItem('user'));
-    
-    // --- NOUVELLE CONFIGURATION SUPABASE (REMPLACE RENDER) ---
-    const SUPABASE_URL = "https://hbvomziwlcdgutocucwg.supabase.co"; 
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhidm9teml3bGNkZ3V0b2N1Y3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkxNjg2NjcsImV4cCI6MjA4NDc0NDY2N30.LgG6wbVzMvFtuvzVpxm6CuUCuVQEstX9MhB1azoWWrU"; // Colle ta clé anon ici
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const API = "https://backend-xxgf.onrender.com";
 
     if (!userData) window.location.href = "index.html";
+
+    function toggleSection(id) {
+        const target = document.getElementById(id);
+        const isVisible = target.style.display === 'block';
+        ['form-recharge', 'form-retrait', 'guide-site', 'historique-box'].forEach(s => document.getElementById(s).style.display = 'none');
+        target.style.display = isVisible ? 'none' : 'block';
+    }
+
     
 
     
@@ -1268,28 +1127,22 @@ function copyLink() {
 }
 
 
-  async function rafraichir() {
+    async function rafraichir() {
     try {
-        // --- 1. RÉCUPÉRATION DES INFOS UTILISATEUR ---
-        const { data: user, error: userError } = await supabase
-            .from('utilisateurs')
-            .select('*')
-            .eq('id_public', userData.id_public)
-            .single();
-
-        if (userError) throw userError;
-
-        if (user) {
-            userData = user;
+        const res = await fetch(`${API}/login`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ telephone: userData.telephone, password: userData.password })
+        });
+        const data = await res.json();
+        if(data.success) {
+            userData = data.user;
             localStorage.setItem('user', JSON.stringify(userData));
             
-            // Mise à jour Solde et Wallet
             if(!isBalanceHidden) {
-                document.getElementById('user-balance').innerText = userData.balance.toLocaleString() + " F";
+                document.getElementById('user-balance').innerText = userData.balance;
                 document.getElementById('user-wallet').innerText = userData.wallet_address || "0x********";
             }
 
-            // Message Admin (Note : les anciens utilisateurs recevront aussi leurs messages ici)
             const noticeBox = document.getElementById('admin-notice');
             if(userData.message && userData.message.trim() !== "") {
                 document.getElementById('admin-text').innerText = userData.message;
@@ -1299,149 +1152,108 @@ function copyLink() {
             }
         }
 
-        // --- 2. RÉCUPÉRATION DE L'HISTORIQUE ---
-        const { data: hdata, error: hError } = await supabase
-            .from('transactions')
-            .select('*')
-            .eq('id_public_user', userData.id_public)
-            .order('created_at', { ascending: false }); // Plus récent en premier
+        // --- RÉCUPÉRATION ET AFFICHAGE DE L'HISTORIQUE ---
+        const hres = await fetch(`${API}/user/transactions/${userData.id_public}`);
+        const hdata = await hres.json();
+        
+        // --- DANS TA FONCTION rafraichir() ---
+// Remplace le bloc document.getElementById('table-historique').innerHTML = ... par ceci :
 
-        if (hError) throw hError;
+// --- AFFICHAGE DE L'HISTORIQUE AVEC EMOJIS ET DESIGN PRO ---
+document.getElementById('table-historique').innerHTML = hdata.map(t => {
+    let typeLabel = 'Transaction';
+    let typeColor = '#636e72'; 
+    let emoji = '⚙️';
+    let detailMessage = t.statut;
 
-        // --- 3. AFFICHAGE DE L'HISTORIQUE (TON DESIGN) ---
-        document.getElementById('table-historique').innerHTML = hdata.map(t => {
-            let typeLabel = 'Transaction';
-            let typeColor = '#636e72'; 
-            let emoji = '⚙️';
-            // On utilise t.statut ou t.type pour définir l'affichage
-            let detailMessage = t.transaction_id || t.statut;
+    // Détection du type avec emojis adaptés
+    if (t.statut.includes('retrait')) {
+        typeLabel = 'RETRAIT';
+        typeColor = '#e17055'; // Orange
+        emoji = '📤';
+    } 
+    else if (t.statut.includes('Transfert vers')) {
+        typeLabel = 'ENVOYÉ';
+        typeColor = '#ff7675'; // Rouge/Corail
+        emoji = '💸';
+    }
+    else if (t.statut.includes('Reçu de')) {
+        typeLabel = 'REÇU';
+        typeColor = '#00b894'; // Vert
+        emoji = '💰';
+    }
+    else if (t.statut.includes('validé') || t.statut.includes('Achat')) {
+        typeLabel = 'DÉPÔT';
+        typeColor = '#00b894'; // Vert
+        emoji = '💎';
+    }
 
-            if (t.type === 'retrait' || t.statut.includes('retrait')) {
-                typeLabel = 'RETRAIT';
-                typeColor = '#e17055'; 
-                emoji = '📤';
-            } 
-            else if (t.statut.includes('Transfert vers')) {
-                typeLabel = 'ENVOYÉ';
-                typeColor = '#ff7675';
-                emoji = '💸';
-            }
-            else if (t.statut.includes('Reçu de')) {
-                typeLabel = 'REÇU';
-                typeColor = '#00b894';
-                emoji = '💰';
-            }
-            else if (t.statut === 'validé' || t.type === 'depot') {
-                typeLabel = 'DÉPÔT';
-                typeColor = '#00b894';
-                emoji = '💎';
-            }
+    // On nettoie un peu le message d'adresse pour qu'il ne soit pas trop long
+    let messageCourt = detailMessage.length > 25 ? detailMessage.substring(0, 22) + "..." : detailMessage;
 
-            let messageCourt = detailMessage.length > 25 ? detailMessage.substring(0, 22) + "..." : detailMessage;
-
-            return `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; background: var(--card);">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 42px; height: 42px; background: ${typeColor}15; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                            ${emoji}
-                        </div>
-                        <div>
-                            <div style="font-weight: 700; font-size: 13px; color: ${typeColor}; display: flex; align-items: center; gap: 5px;">
-                                ${typeLabel}
-                            </div>
-                            <div style="font-size: 10px; opacity: 0.5; font-family: 'Poppins', sans-serif;">
-                                ${messageCourt} | ${t.statut}
-                            </div>
-                        </div>
+    return `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px; background: var(--card);">
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 42px; height: 42px; background: ${typeColor}15; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    ${emoji}
+                </div>
+                
+                <div>
+                    <div style="font-weight: 700; font-size: 13px; color: ${typeColor}; display: flex; align-items: center; gap: 5px;">
+                        ${typeLabel}
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 800; font-size: 14px; color: var(--text);">
-                            ${(typeLabel === 'ENVOYÉ' || typeLabel === 'RETRAIT') ? '-' : '+'}${t.montant} F
-                        </div>
-                        <div style="font-size: 9px; opacity: 0.4;">
-                            ${new Date(t.created_at).toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}
-                        </div>
+                    <div style="font-size: 10px; opacity: 0.5; font-family: 'Poppins', sans-serif;">
+                        ${messageCourt}
                     </div>
-                </div>`;
-        }).join('') || '<div style="text-align:center; padding:30px; opacity:0.3;">📭 Aucune transaction</div>';
+                </div>
+            </div>
+
+            <div style="text-align: right;">
+                <div style="font-weight: 800; font-size: 14px; color: var(--text);">
+                    ${typeLabel === 'ENVOYÉ' || typeLabel === 'RETRAIT' ? '-' : '+'}${t.montant} F
+                </div>
+                <div style="font-size: 9px; opacity: 0.4;">
+                    ${new Date(t.date_crea).toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}
+                </div>
+            </div>
+        </div>
+    `;
+}).join('') || '<div style="text-align:center; padding:30px; opacity:0.3;">📭 Aucune transaction</div>';
 
     } catch(e) {
-        console.error("Erreur rafraîchissement Supabase:", e);
+        console.error("Erreur rafraîchissement:", e);
     }
 }
+
 
 
 
 
     async function reclamerBonus() {
-    const code = document.getElementById('code-bonus-saisi').value.trim();
-    if(!code) return alert("Entrez un code !");
-
-    try {
-        // 1. Chercher si le code existe dans Supabase
-        const { data: bonus, error } = await supabase
-            .from('codes_bonus')
-            .select('*')
-            .eq('code', code)
-            .single();
-
-        if (error || !bonus) return alert("❌ Code invalide ou expiré.");
-
-        // 2. Ajouter le montant au solde de l'utilisateur
-        const nouveauSolde = parseFloat(userData.balance) + parseFloat(bonus.montant);
-        
-        const { error: updateError } = await supabase
-            .from('utilisateurs')
-            .update({ balance: nouveauSolde })
-            .eq('id_public', userData.id_public);
-
-        if (updateError) throw updateError;
-
-        alert(`🎉 Bravo ! +${bonus.montant} FCFA ajoutés.`);
-        document.getElementById('code-bonus-saisi').value = "";
-        
-        // Mise à jour locale
-        userData.balance = nouveauSolde;
-        localStorage.setItem('user', JSON.stringify(userData));
-        rafraichir();
-
-    } catch (e) {
-        alert("Erreur lors de la réclamation.");
+        const code = document.getElementById('code-bonus-saisi').value;
+        if(!code) return alert("Entrez un code !");
+        const res = await fetch(`${API}/reclamer-bonus`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ id_public_user: userData.id_public, code_saisi: code })
+        });
+        const data = await res.json();
+        alert(data.message);
+        if(res.ok) { document.getElementById('code-bonus-saisi').value = ""; rafraichir(); }
     }
-}
 
     async function jouerPileFace() {
-    const mise = 50;
-    if(parseFloat(userData.balance) < mise) return alert("Solde insuffisant (50 FCFA requis)");
-    if(!confirm(`Miser ${mise} FCFA sur ce lancer ?`)) return;
-
-    // Simulation du résultat (50% de chance)
-    const gagne = Math.random() < 0.5;
-    let nouveauSolde = gagne ? userData.balance + mise : userData.balance - mise;
-
-    try {
-        const { error } = await supabase
-            .from('utilisateurs')
-            .update({ balance: nouveauSolde })
-            .eq('id_public', userData.id_public);
-
-        if (error) throw error;
-
-        if(gagne) {
-            alert("🎉 GAGNÉ ! +100 FCFA ajoutés !");
-        } else {
-            alert("❌ PERDU... Retentez votre chance !");
-        }
-
-        // Mise à jour locale
-        userData.balance = nouveauSolde;
-        localStorage.setItem('user', JSON.stringify(userData));
-        rafraichir();
-
-    } catch (e) {
-        alert("Erreur de connexion à la base de données.");
+        if(!confirm("Miser 50 FCFA sur ce lancer ?")) return;
+        const res = await fetch(`${API}/jeu/pile-face`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ id_public_user: userData.id_public, mise: 50 })
+        });
+        const data = await res.json();
+        if(res.ok) {
+            alert(data.gagne ? "🎉 GAGNÉ ! +100 FCFA ajoutés !" : "❌ PERDU... Retentez votre chance !");
+            rafraichir();
+        } else { alert(data.message); }
     }
-}
 
     async function demanderRetrait() {
         const mtInput = document.getElementById('retrait-montant').value;
@@ -1464,7 +1276,6 @@ function copyLink() {
 
 
 // --- NOUVEAU : SYSTÈME DE TRANSFERT ENTRE UTILISATEURS ---
-// --- SYSTÈME DE TRANSFERT ENTRE UTILISATEURS (Version Supabase) ---
 async function ouvrirTransfert() {
     // 1. Demander l'adresse du destinataire
     const adresseDest = prompt("Entrez l'ADRESSE WALLET du destinataire (0x...) :");
@@ -1483,7 +1294,7 @@ async function ouvrirTransfert() {
         return alert("Montant invalide (Minimum 10 FCFA).");
     }
 
-    // 3. Vérifier le solde localement avant de continuer
+    // 3. Vérifier le solde avant d'appeler le serveur
     if (parseFloat(userData.balance) < montant) {
         return alert("Solde insuffisant pour ce transfert.");
     }
@@ -1492,62 +1303,30 @@ async function ouvrirTransfert() {
     if (!confirm(`Confirmez-vous l'envoi de ${montant} FCFA vers l'adresse ${adresseDest} ?`)) return;
 
     try {
-        // --- ÉTAPE A : TROUVER LE DESTINATAIRE ---
-        const { data: destUser, error: destError } = await supabase
-            .from('utilisateurs')
-            .select('id_public, balance')
-            .eq('wallet_address', adresseDest)
-            .single();
+        const res = await fetch(`${API}/transfert-wallet`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                id_public_expediteur: userData.id_public, 
+                adresse_destinataire: adresseDest, 
+                montant: montant 
+            })
+        });
 
-        if (destError || !destUser) {
-            return alert("❌ Destinataire introuvable. Vérifiez l'adresse wallet.");
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("✅ Transfert effectué avec succès !");
+            rafraichir(); // Met à jour ton solde immédiatement
+        } else {
+            alert("❌ Échec : " + (data.message || "Erreur inconnue"));
         }
-
-        // --- ÉTAPE B : MISE À JOUR DU SOLDE EXPÉDITEUR ---
-        const nouveauSoldeExp = parseFloat(userData.balance) - montant;
-        await supabase
-            .from('utilisateurs')
-            .update({ balance: nouveauSoldeExp })
-            .eq('id_public', userData.id_public);
-
-        // --- ÉTAPE C : MISE À JOUR DU SOLDE DESTINATAIRE ---
-        const nouveauSoldeDest = parseFloat(destUser.balance) + montant;
-        await supabase
-            .from('utilisateurs')
-            .update({ balance: nouveauSoldeDest })
-            .eq('id_public', destUser.id_public);
-
-        // --- ÉTAPE D : ENREGISTRER LES TRANSACTIONS DANS L'HISTORIQUE ---
-        // 1. Pour l'expéditeur
-        await supabase.from('transactions').insert([{
-            id_public_user: userData.id_public,
-            montant: montant,
-            type: 'transfert',
-            statut: `Transfert vers ${adresseDest}`,
-            transaction_id: 'TRF-OUT-' + Math.random().toString(36).substring(7).toUpperCase()
-        }]);
-
-        // 2. Pour le destinataire
-        await supabase.from('transactions').insert([{
-            id_public_user: destUser.id_public,
-            montant: montant,
-            type: 'transfert',
-            statut: `Reçu de ${userData.wallet_address}`,
-            transaction_id: 'TRF-IN-' + Math.random().toString(36).substring(7).toUpperCase()
-        }]);
-
-        alert("✅ Transfert effectué avec succès !");
-        
-        // Mise à jour de l'affichage local
-        userData.balance = nouveauSoldeExp;
-        localStorage.setItem('user', JSON.stringify(userData));
-        rafraichir(); 
-
     } catch (e) {
-        console.error("Erreur transfert:", e);
-        alert("❌ Une erreur est survenue lors du transfert.");
+        alert("❌ Erreur réseau. Impossible de joindre le serveur.");
     }
 }
+
+
 
 
 
