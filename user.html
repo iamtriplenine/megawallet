@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mega Wallet - Mon Espace</title>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 
@@ -1177,21 +1177,17 @@ function copierAdresse(event) {
         document.getElementById('theme-menu').style.display = 'none';
     }
     
-    const savedTheme = localStorage.getItem('wallet-theme');
+   const savedTheme = localStorage.getItem('wallet-theme');
     if(savedTheme) setTheme(savedTheme);
 
     let userData = JSON.parse(localStorage.getItem('user'));
-    const API = "https://backend-xxgf.onrender.com";
+    
+    // --- NOUVELLE CONFIGURATION SUPABASE (REMPLACE RENDER) ---
+    const SUPABASE_URL = "https://hbvomziwlcdgutocucwg.supabase.co"; 
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhidm9teml3bGNkZ3V0b2N1Y3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkxNjg2NjcsImV4cCI6MjA4NDc0NDY2N30.LgG6wbVzMvFtuvzVpxm6CuUCuVQEstX9MhB1azoWWrU"; // Colle ta clé anon ici
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     if (!userData) window.location.href = "index.html";
-
-    function toggleSection(id) {
-        const target = document.getElementById(id);
-        const isVisible = target.style.display === 'block';
-        ['form-recharge', 'form-retrait', 'guide-site', 'historique-box'].forEach(s => document.getElementById(s).style.display = 'none');
-        target.style.display = isVisible ? 'none' : 'block';
-    }
-
     
 
     
